@@ -96,17 +96,22 @@
 #     app.run(host="0.0.0.0", port=3000)
 from flask import Flask, render_template, jsonify
 import mysql.connector
+import os
+from dotenv import load_dotenv
 
 # 設定 Flask 應用
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
+load_dotenv()
+password = os.environ.get("PASSWORD")
+
 # 資料庫連接設定
 db_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'rootroot',
+    'password': password,
     'database': 'taipei_day_trip'
 }
 
