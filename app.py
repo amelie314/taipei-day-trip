@@ -198,7 +198,7 @@ def api_mrts():
         cursor = db.cursor(dictionary=True)
 
         # 取得數據庫库不重複的捷運站名稱
-        cursor.execute("SELECT DISTINCT MRT FROM attractions")
+        cursor.execute("SELECT MRT, COUNT(*) as cnt FROM attractions GROUP BY MRT ORDER BY cnt DESC")
         mrt_names = [row['MRT'] for row in cursor.fetchall()]
 
         # 將捷運站名稱格式化為JSON
