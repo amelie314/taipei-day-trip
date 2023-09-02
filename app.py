@@ -202,9 +202,10 @@ def api_mrts():
         mrt_names = [row['MRT'] for row in cursor.fetchall()]
 
         # 將捷運站名稱格式化為JSON
-        mrts_json = [{"name": name} for name in mrt_names]
-
+        # mrts_json = [{"name": name} for name in mrt_names]
+        mrts_json =  ({"data": mrt_names})
         return jsonify(mrts_json)
+    
     except mysql.connector.Error as err:
         print("Database error: {}".format(err))
         return jsonify({"error": "Database error"}), 500
