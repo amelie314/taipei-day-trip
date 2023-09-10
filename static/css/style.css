@@ -1,0 +1,390 @@
+*, *::before, *:after {
+  box-sizing: border-box;
+}
+
+@charset "UTF-8";
+body {
+  margin: 0;
+  font-size: 20px;
+  font-family: Noto Sans TC;
+}
+header {
+  height: 54px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  font-size: 20px;
+  color: #0E3C33;
+  font-weight: bold;
+}
+
+nav h1{
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 34px; 
+  color: #448899;
+}
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+nav {
+  width: 1200px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+nav ul li {
+  margin-left: 20px;
+}
+nav ul li a {
+  /* 修改nav items文字 */
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 13.3px; 
+  text-decoration: none;
+  color: #666666;
+}
+
+.banner {
+  /* UI fixed */
+  margin-top: 54px;
+  /* UI bg  */
+  height: 320px;
+  background-image: url(https://s3-alpha-sig.figma.com/img/8e51/49c7/686e7b3ebaa358e8438012f5d6a7a7b6?Expires=1694995200&Signature=LWmjn3vIZnf-Wzy9AVzcGhMX5ZMj1h8aIbkh9H5GsR6xnjHYAw6gAHFQqGfbrR-q3uQCTevWWajKoSjwZOTEkeiMaoCGLS~IB9QiHri1VWCMjAbFtEJW40S8diPz9KrELyE8EY05yO4rHFCStYrkw-AEB1bp725ARyhTi9SAOfO0B4mFziqr~Z6AYgyH2FWLwPCmXWpE5IbTX9WpT9kuybHXIYuFWp9RqxgcAJuxnVirsFcNIR8dW6pbdvmd9v4zfjFLAIQxacJVn4R7mtGU2oVoFIz5cb2wruD9EvH0qlBs40lDPR~lCa7lqk1oM2wSUPz9hgvoqnkhsg4~bPqYrQ__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4);
+  background-repeat: no-repeat;
+  background-size: cover;  /* 圖片會拉伸或縮放，以填滿容器 */
+  background-position: top;
+}
+
+.banner .banner-text {
+  /* UI Setup*/
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  /* justify-content: flex-start; */
+  /* align-items: flex-start; */
+}
+.banner h2 {
+  /* UI bg */
+  margin-top: 85px;
+  margin-bottom: 15px;
+  /* UI */
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--secondary-color-gray-10, #f8f8f8);
+  text-shadow: 0px 0px 30px #abc;
+}
+.banner p {
+  /* UI bg */
+  margin-bottom: 25px;
+  /* UI */
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--secondary-color-gray-10, #f8f8f8);
+}
+.banner .search-bar {
+  /*  UI */
+  position: relative;
+  width: 460px;
+  height: 46px;
+  border: none;
+  /* guess */
+  border-radius: 4px;
+  fill: var(--White, #fff);
+}
+.banner .search-bar #search-input {
+  /* UI bg */
+  width: 100%;
+  border: none;
+  fill: var(--White, #fff);
+  border-radius: 5px;
+  /* UI word */
+  padding: 15px;
+  font-weight: 700;
+  /* UI Button */
+  /* padding-right: 45px; */
+}
+#search-button {
+  /* UI bg */
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 100%;
+  margin: 0;
+  /* background-color: Primary Color/Cyan 70; 藍綠色 */
+  background-color: var(--primary-color-cyan-70, #489);
+  border: none;
+  /* UI word */
+  color: white;
+  cursor: pointer;
+}
+
+main {
+  margin: 50px auto 250px auto;
+  width: 1200px;
+}
+/* List-bar*/
+.list-bar {
+  display: flex;
+  overflow: hidden;
+  max-width: 1200px; /* 設定列表條寬度 */
+  align-items: center; /* 垂直置中 */
+  margin-bottom: 20px;
+}
+
+.list-item {
+  background: #ffffff;
+  border: none;
+  flex: 0 0 auto;
+  padding: 5px 15px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* 左右滑動效果 */
+.list-container {
+  display: flex;
+  justify-content: space-between; /* 平均散佈 */
+  transition: transform 0.3s ease-in-out;
+  overflow-x: hidden; /* 水平滾動 */
+}
+
+/* 按鈕樣式 */
+.scroll-button {
+  padding: 5px 15px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  margin: 0 5px;
+}
+
+.scroll-button{
+  background-color: white;
+}
+.scroll-button:hover {
+  background-color: #aaa;
+}
+
+
+/* 12個Profile方框的容器 */
+.profile {
+  padding: 15px;
+  gap: 30px 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* Profile方框 */
+.profile-li {
+  position: relative;
+  height: 242px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #FFFFFF;
+  flex-grow: 1;
+  flex-basis: 22%;
+  overflow: hidden;
+  border: 1px solid #E8E8E8;
+  border-radius: 5px;
+}
+
+/* Profile方框內的上部區塊 */
+.profile-li .card-top {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* card-top 內容 */
+.card-top {
+  position: relative;
+  height: 197px;
+}
+
+/* Profile方框內的下部區塊 */
+.profile-li .card-bottom {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Profile方框內的圖片 */
+.profile-li .card-top .main-img {
+  width: 100%;
+  height: 197px;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* Profile方框內的文字 */
+.profile-li .profile-title {
+  position: absolute;
+  height: 40px;
+  width: 100%;
+  z-index: 1;
+  background: rgba(49, 48, 48, 0.5);
+  color: white;
+  bottom: 0px;
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 13.3px;
+}
+/* card-bottom 內容 */
+.card-bottom {
+  padding: 10px;
+  color:#757575;
+  font-weight: 500;
+  line-height: 13.3px;
+}
+
+/* 分類和捷運站的資訊 */
+.profile-li .card-bottom .profile-category,
+.profile-li .card-bottom .profile-mrt {
+  margin: 5px;
+  font-size: 14px;
+}
+
+
+@media  (max-width: 1200px) {
+ main {
+    width: 90%;
+  }
+}
+/* 在600 像素 < 螢幕解析度的寬度 <= 1200 像素 */
+/* 主內容上⽅3個thumbnail，分為上下兩列。主內容上⽅ 3 個⽅框，總寬度必須在 90%，
+   內部的圖片尺⼨保持 80x50 像素。 上列保持寬度相同且各占⼀半 */
+@media (min-width: 600px) and (max-width: 1200px) {
+  .hamburger-menu {
+    display: none;
+  }
+  .profile {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .profile-li {
+    /* display: flex; */
+    flex-grow: 1;
+    flex-basis: calc(20% - 10px); /* 每行4個方框，減去間距的一半 */
+    box-sizing: border-box;
+  }
+  .profile-img {
+    width: 100%;
+    object-fit: cover;
+  }
+  .profile-title {
+    display: flex;
+    justify-content: center; /* 水平置中 */
+    align-items: center; /* 垂直置中 */
+    height: 20px; /* 填滿父元素的高度 */
+  }
+}
+  
+@media (min-width: 360px) and (max-width: 600px) {
+  nav ul {
+     display: none; /* 隱藏原有的導航菜單 */
+  }
+  nav .hamburger-menu {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .hamburger-menu img {
+    width: 20px;
+  }
+  
+  .menu-items {
+    display: none;
+  }
+  .profile {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .profile-li {
+    flex-basis: 100%; /* 每個 profile-li 佔據整行的寬度 */
+    box-sizing: border-box;
+  }
+
+  .profile-img {
+    width: 100%; /* 圖片寬度與方框相同 */
+    height: auto; /* 高度自適應 */
+  }
+  .profile-title {
+    display: flex;
+    justify-content: center; /* 水平置中 */
+    align-items: center; /* 垂直置中 */
+    height: 20px; /* 填滿父元素的高度 */
+  }
+}
+
+
+@media (min-width: 600px) and (max-width: 1200px) {
+  .hamburger-menu {
+    display: none;
+  }
+  .profile {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .profile-li {
+    flex-grow: 1;
+    flex-basis: calc(20% - 10px);
+    box-sizing: border-box;
+  }
+}
+
+footer {
+  width: 100%;  /* 設定寬度為 100% */
+  padding: 0;
+  height: 104px;  /* 設定高度為 104px */
+  background-color: #757575;  /* 設定背景顏色 */
+  display: flex;
+  align-items: center;  /* 垂直置中 */
+  justify-content: center;  /* 水平置中 */
+  /* margin-top: 40px; 移除或注釋此行 */
+  position: fixed;
+  bottom: 0;
+  z-index: 999;
+}
+
+
+.footer-text-box {
+  font-size: 16px;  /* 設定字體大小 */
+  font-weight: 700;  /* 設定字體粗細 */
+  line-height: 13px;  /* 設定行高 */
+  color: white;
+}
+
