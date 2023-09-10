@@ -52,26 +52,6 @@ def booking():
 def thankyou():
     return render_template("thankyou.html")
 
-# @app.route("/api/attractions", methods=['GET'])
-# def api_attractions():
-#     try:
-#         db = mysql.connector.connect(**db_config)
-#         cursor = db.cursor(dictionary=True)
-#         cursor.execute("SELECT * FROM attractions")
-#         attractions = cursor.fetchall()
-#         attractions_json = [convert_to_dict(attraction, cursor) for attraction in attractions]
-        
-#         output = {
-#             "nextPage": 1,
-#             "data": attractions_json
-#         }
-#         return jsonify(output)
-#     except mysql.connector.Error as err:
-#         print("Database error: {}".format(err))
-#         return jsonify({"error": True, "message": "資料庫錯誤"}), 500
-#     finally:
-#         cursor.close()
-#         db.close()
 @app.route("/api/attractions", methods=['GET'])
 def api_attractions():
     cursor = None  # 初始化為 None
@@ -82,14 +62,23 @@ def api_attractions():
 
         db = mysql.connector.connect(**db_config)
         cursor = db.cursor(dictionary=True)
+        
+        # 總數
+        count_query = "SELECT COUNT(*) FROM attractions"
+        if keyword:
+            count_query += " WHERE name LIKE %s OR mrt = %s"
+        cursor.execute(count_query, ("%"+keyword+"%", keyword) if keyword else ())
+        
+        total_count = cursor.fetchone()['COUNT(*)']
 
         sql_query = "SELECT * FROM attractions"
         sql_params = []
         
         if keyword:
-            sql_query += " WHERE name LIKE %s"
+            sql_query += " WHERE name LIKE %s OR mrt = %s"
             sql_params.append("%" + keyword + "%")
-        
+            sql_params.append(keyword)  # 添加這一行
+
         sql_query += " LIMIT %s, 12"
         sql_params.append(page * 12)
 
@@ -98,8 +87,13 @@ def api_attractions():
         attractions = cursor.fetchall()
         attractions_json = [convert_to_dict(attraction, cursor) for attraction in attractions]
 
+        nextPage = None
+        
+        if (page + 1) * 12 < total_count:
+            nextPage = page + 1
+            
         output = {
-            "nextPage": page + 1 if attractions else None,
+            "nextPage": nextPage,
             "data": attractions_json
         }
 
