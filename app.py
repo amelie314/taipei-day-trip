@@ -16,7 +16,7 @@ db_config = {
     'host': 'localhost',
     'user': 'root',
     'password': password,
-    'database': 'taipei_day_trip'
+    'database': 'taipei_day_trip_2'
 }
 
 # 從 attraction_images 表格中獲取景點的圖片 URLs

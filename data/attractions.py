@@ -3,7 +3,7 @@
 # import re
 
 # # 讀取JSON檔案
-# with open('./data/taipei-attractions.json', 'r', encoding='utf-8') as file:
+# with open('./taipei-attractions.json', 'r', encoding='utf-8') as file:
 #     data = json.load(file)
 
 # # 連接到 MySQL 資料庫
@@ -70,20 +70,25 @@
 # db_connection.commit()
 # cursor.close()
 # db_connection.close()
+from dotenv import load_dotenv
+import os
 import json
 import mysql.connector
 import re  # 引入正則表達式模組
 
 # 讀取JSON檔案
-with open('./data/taipei-attractions.json', 'r', encoding='utf-8') as file:
+with open("./taipei-attractions.json", 'r', encoding='utf-8') as file:
     data = json.load(file)
+    
+load_dotenv(dotenv_path='../.env')
+password = os.environ.get("PASSWORD")
 
 # 連接到 MySQL 資料庫
 db_connection = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="rootroot",
-    database="taipei_day_trip"
+    password= password,
+    database="taipei_day_trip_2"
 )
 cursor = db_connection.cursor()
 
@@ -155,7 +160,8 @@ for attraction in data['result']['results']:
 
     # 分析並過濾圖片URL
     image_urls = attraction['file'].split("https://")
-    jpg_png_urls = [url for url in image_urls if re.search(r'(?:jpg|png)$', url)]
+    jpg_png_urls = [url for url in image_urls if re.search(r'(?:jpg|png)$', url, re.IGNORECASE)]
+
     
     for url in jpg_png_urls:
         insert_image_query = '''
