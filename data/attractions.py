@@ -88,9 +88,12 @@ db_connection = mysql.connector.connect(
     host="localhost",
     user="root",
     password= password,
-    database="taipei_day_trip_2"
+    # database="taipei_day_trip_2"
 )
 cursor = db_connection.cursor()
+
+cursor.execute("CREATE DATABASE IF NOT EXISTS taipei_day_trip_2")
+cursor.execute("USE taipei_day_trip_2")
 
 # 建立或修改景點資料表
 create_table_query = '''
@@ -169,6 +172,8 @@ for attraction in data['result']['results']:
             VALUES (%s, %s)
         '''
         cursor.execute(insert_image_query, (last_id, "https://" + url))
+        
+    print('success')
 
 # 提交並關閉資料庫連接
 db_connection.commit()
