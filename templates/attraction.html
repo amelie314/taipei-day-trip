@@ -63,7 +63,7 @@
           window.location = urlApi;
         });
       });
-      
+
       document.addEventListener("DOMContentLoaded", () => {
         const path = window.location.pathname;
         const lastSegment = path.split("/").pop();
@@ -80,7 +80,7 @@
           indicators[currentImageIndex].classList.add("active");
         }
 
-        fetch(`http://127.0.0.1:3000/api/attraction/${lastSegment}`)
+        fetch(`http://3.131.18.21:3000/api/attraction/${lastSegment}`)
           .then((response) => response.json())
           .then((data) => {
             if (data && data.data) {
