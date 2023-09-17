@@ -52,6 +52,10 @@ def booking():
 def thankyou():
     return render_template("thankyou.html")
 
+@app.route("/attraction/<id>")
+def attraction(id):
+    return render_template("attraction.html")
+
 @app.route("/api/attractions", methods=['GET'])
 def api_attractions():
     cursor = None  # 初始化為 None

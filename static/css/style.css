@@ -2,8 +2,6 @@
   box-sizing: border-box;
 }
 
-@charset "UTF-8";
-
 body {
   margin: 0;
   font-size: 20px;
@@ -22,12 +20,13 @@ header {
   font-weight: bold;
 }
 
-h1{
+.logo{
   font-size: 30px;
   font-style: normal;
   font-weight: 700;
   line-height: 34px; 
   color: #448899;
+  cursor: pointer;
 }
 
 header {

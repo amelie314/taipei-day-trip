@@ -1,268 +1,301 @@
+<!-- @format -->
+
 <!DOCTYPE html>
 <html lang="zh-TW">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>台北一日遊</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-  <script src="https://kit.fontawesome.com/53c20d969e.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-  <header>
-    <nav>
-      <h1 class="logo">台北一日遊</h1>
-      <ul class="menu-items">
-        <li><a href="#">預留行程</a></li>
-        <li><a href="#">登入/註冊</a></li>
-      </ul>
-    </nav>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>台北一日遊</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+    />
+    <script
+      src="https://kit.fontawesome.com/53c20d969e.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <h1 class="logo">台北一日遊</h1>
+        <ul class="menu-items">
+          <li><a href="#">預留行程</a></li>
+          <li><a href="#">登入/註冊</a></li>
+        </ul>
+      </nav>
+    </header>
 
-  <div class="banner">
-    <div class="banner-text">
-      <h2>輕鬆享受台北一日悠閒</h2>
-      <p>探索每個角落，體驗城市的深度旅遊行程</p>
-      <div class="search-bar">
-        <input type="text" placeholder="輸入景點名稱查詢" id="search-input">
-        <button title="search-query" type="submit" id="search-button">
-          <i class="fas fa-search"></i>
+    <div class="banner">
+      <div class="banner-text">
+        <h2>輕鬆享受台北一日悠閒</h2>
+        <p>探索每個角落，體驗城市的深度旅遊行程</p>
+        <div class="search-bar">
+          <input type="text" placeholder="輸入景點名稱查詢" id="search-input" />
+          <button title="search-query" type="submit" id="search-button">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <div class="list-bar">
+        <button class="scroll-button prev-button">
+          <img src="../static/images/button/Left.png" alt="上一頁" />
+        </button>
+        <div class="list-container">
+          <!-- 選項將在這裡動態生成 -->
+        </div>
+        <button class="scroll-button next-button">
+          <img src="../static/images/button/Right.png" alt="下一頁" />
         </button>
       </div>
-    </div>
-  </div>
 
-  <main>
-    <div class="list-bar">
-      <button class="scroll-button prev-button">
-        <img src="../static/images/button/Left.png" alt="上一頁">
-      </button>
-      <div class="list-container">
-        <!-- 選項將在這裡動態生成 -->
+      <ul class="profile">
+        <!-- 景點資料將在這裡動態生成 -->
+      </ul>
+
+      <div class="container">
+        <!-- 初始資料將會載入這裡，之後的資料也會附加在這裡 -->
       </div>
-      <button class="scroll-button next-button">
-        <img src="../static/images/button/Right.png" alt="下一頁">
-      </button>
-    </div>
-    
-    <ul class="profile">
-      <!-- 景點資料將在這裡動態生成 -->
-    </ul>
+    </main>
 
-    <div class="container">
-      <!-- 初始資料將會載入這裡，之後的資料也會附加在這裡 -->
-    </div>
+    <footer>
+      <div class="footer-text-box">COPYRIGHT © 2021 台北一日遊</div>
+    </footer>
 
-  </main>
+    <script>
+      //ubuntu server IP & PORT
 
-  <footer>
-    <div class="footer-text-box">
-      COPYRIGHT © 2021 台北一日遊
-    </div>
-  </footer>
+      //開發時用：http://127.0.0.1:3000/;
+      //上傳時用：http://3.131.18.21:3000/;
 
-  <script>
-//ubuntu server IP & PORT
+      let urlApi = `http://3.131.18.21:3000/`;
+      // let urlApi = `http://127.0.0.1:3000/`;
+      let isLoading = false;
+      let keywordInput = "";
+      let nextPage = 0;
 
-//開發時用：http://127.0.0.1:3000/;
-//上傳時用：http://3.131.18.21:3000/;
+      fetchData(nextPage);
 
-let urlApi = `http://3.131.18.21:3000/`;
-// let urlApi = `http://127.0.0.1:3000/`;
-let isLoading = false;
-let keywordInput = "";
-let nextPage = 0;
+      // 當文檔載入完成後
+      document.addEventListener("DOMContentLoaded", function () {
+        // 找到具有 'logo' 類別的 h1 元素
+        const logoElement = document.querySelector(".logo");
 
-fetchData(nextPage);
+        // 為這個 h1 元素添加 click 事件監聽器
+        logoElement.addEventListener("click", function () {
+          // 使用 urlApi 進行導航
+          window.location = urlApi;
+        });
+      });
 
-function fetchData(page, keyword="") {
-  // 如果正在載入或沒有下一頁，則返回
-  if (isLoading  || nextPage === null) return;
-  // 設置 isLoading 為 true，防止重複載入
-  isLoading = true;
+      function fetchData(page, keyword = "") {
+        // 如果正在載入或沒有下一頁，則返回
+        if (isLoading || nextPage === null) return;
+        // 設置 isLoading 為 true，防止重複載入
+        isLoading = true;
 
-  console.log( "loading API ?page=", page, "?keyword=", keyword ? keyword : "全部")
-  
-  let apiUrl = `${urlApi}api/attractions?page=${page}`;
-  if (keyword) {
-    apiUrl += `&keyword=${keyword}`;
-  }
-  console.log(apiUrl);
+        console.log(
+          "loading API ?page=",
+          page,
+          "?keyword=",
+          keyword ? keyword : "全部"
+        );
 
-  // 載入資料
-  fetch(apiUrl)
-    .then(response => response.json())
-    .then(data => {
-
-      if (data.data && data.data.length > 0) {
-        console.log("data keyword");
-
-        if (keyword && nextPage === 0) {
-          const profile = document.querySelector(".profile");
-          profile.innerHTML = ""; // 清空原本的內容
+        let apiUrl = `${urlApi}api/attractions?page=${page}`;
+        if (keyword) {
+          apiUrl += `&keyword=${keyword}`;
         }
+        console.log(apiUrl);
 
-        createElements(data);
+        // 載入資料
+        fetch(apiUrl)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.data && data.data.length > 0) {
+              console.log("data keyword");
 
-        nextPage = data.nextPage;
-   
-        console.log( "Next loading API ?page=", nextPage)
-      } else {
-        // 如果沒有找到相關資料，你也可以選擇顯示一個提示訊息
-        const profile = document.querySelector(".profile");
-        profile.innerHTML = keyword ? "未找到相關景點" : "";
+              if (keyword && nextPage === 0) {
+                const profile = document.querySelector(".profile");
+                profile.innerHTML = ""; // 清空原本的內容
+              }
+
+              createElements(data);
+
+              nextPage = data.nextPage;
+
+              console.log("Next loading API ?page=", nextPage);
+            } else {
+              // 如果沒有找到相關資料，你也可以選擇顯示一個提示訊息
+              const profile = document.querySelector(".profile");
+              profile.innerHTML = keyword ? "未找到相關景點" : "";
+            }
+
+            isLoading = false; // 設置 isLoading 為 false，以允許下一次載入
+          })
+          .catch((error) => {
+            console.error("從 API 獲取資料時發生錯誤：", error);
+            isLoading = false; // 設置 isLoading 為 false，以允許下一次載入
+          });
       }
 
-      isLoading = false; // 設置 isLoading 為 false，以允許下一次載入
-    })
-    .catch(error => {
-      console.error("從 API 獲取資料時發生錯誤：", error);
-      isLoading = false; // 設置 isLoading 為 false，以允許下一次載入
-    });
-}
+      // 監聽滾動事件
+      window.addEventListener("scroll", () => {
+        if (isLoading) return;
 
+        const { bottom } = document
+          .querySelector(".container")
+          .getBoundingClientRect();
+        const windowHeight = window.innerHeight;
 
-// 監聽滾動事件
-window.addEventListener("scroll", () => {
-  if (isLoading) return;
+        if (bottom <= windowHeight + 10) {
+          fetchData(nextPage, keywordInput);
+        }
+      });
 
-  const { bottom } = document.querySelector(".container").getBoundingClientRect();
-  const windowHeight = window.innerHeight;
-  
-  if (bottom <= windowHeight + 10) {
-    fetchData(nextPage, keywordInput);
-  }
-});
+      //Arrow Button
+      const listContainer = document.querySelector(".list-container");
+      const prevButton = document.querySelector(".prev-button");
+      const nextButton = document.querySelector(".next-button");
+      const scrollAmount = 150; // 你可以根據需要調整這個數值
 
+      prevButton.addEventListener("click", () => {
+        listContainer.scrollLeft -= scrollAmount;
+      });
 
-  //Arrow Button
-  const listContainer = document.querySelector(".list-container");
-  const prevButton = document.querySelector(".prev-button");
-  const nextButton = document.querySelector(".next-button");
-  const scrollAmount = 150; // 你可以根據需要調整這個數值
+      nextButton.addEventListener("click", () => {
+        listContainer.scrollLeft += scrollAmount;
+      });
 
-  prevButton.addEventListener('click', () => {
-    listContainer.scrollLeft -= scrollAmount;
-  });
+      // function setCurrentIndex(index) {
+      //   currentIndex = index;
+      //   updateListPosition();
+      // }
+      // function updateListPosition() {
+      //   const itemWidth = listItems[0].offsetWidth;
+      //   const newPosition = -currentIndex * itemWidth;
+      //   listContainer.style.transform = `translateX(${newPosition}px)`;
+      // }
 
-  nextButton.addEventListener('click', () => {
-    listContainer.scrollLeft += scrollAmount;
-  });
+      // mrt buttons contents
+      function fetchAndGenerateOptions() {
+        fetch(`${urlApi}api/mrts`)
+          .then((response) => response.json())
+          .then((data) => {
+            const optionsNull = data.data;
+            const options = optionsNull.filter(
+              (optionsNull) => optionsNull !== null
+            );
+            const listContainer = document.querySelector(".list-container");
+            listContainer.innerHTML = "";
 
-  // function setCurrentIndex(index) {
-  //   currentIndex = index;
-  //   updateListPosition();
-  // }
-  // function updateListPosition() {
-  //   const itemWidth = listItems[0].offsetWidth;
-  //   const newPosition = -currentIndex * itemWidth;
-  //   listContainer.style.transform = `translateX(${newPosition}px)`;
-  // }
+            options.forEach((option) => {
+              const listItem = document.createElement("button");
+              listItem.className = `list-item`;
+              listItem.textContent = option;
+              listItem.style.color = "#666";
 
-  // mrt buttons contents
-  function fetchAndGenerateOptions() {
-    fetch(`${urlApi}api/mrts`)
-      .then(response => response.json())
-      .then(data => {
-        const optionsNull = data.data; 
-        const options = optionsNull.filter(optionsNull => optionsNull !== null); 
-        const listContainer = document.querySelector(".list-container");
-        listContainer.innerHTML = "";
-        
-        options.forEach((option) => {
-          const listItem = document.createElement("button");
-          listItem.className = `list-item`;
-          listItem.textContent = option; 
-          listItem.style.color = '#666';
+              listItem.addEventListener("click", function () {
+                const searchInput = document.getElementById("search-input");
+                searchInput.value = option;
 
-          listItem.addEventListener("click", function() {
-              const searchInput = document.getElementById("search-input");
-              searchInput.value = option; 
+                nextPage = 0;
 
-              nextPage = 0;
+                keywordInput = option;
 
-              keywordInput = option;
+                fetchData(nextPage, option); // 觸發搜尋
+              });
 
-              fetchData(nextPage, option); // 觸發搜尋
+              listContainer.appendChild(listItem);
+            });
+          })
+          .catch((error) => {
+            console.error("從 API 獲取資料時發生錯誤：", error);
           });
+      }
 
-            listContainer.appendChild(listItem);
-          });
-        })
-        .catch(error => {
-          console.error("從 API 獲取資料時發生錯誤：", error);
+      fetchAndGenerateOptions();
+
+      // 搜尋功能
+      document
+        .getElementById("search-button")
+        .addEventListener("click", function () {
+          const keywordValue = document.getElementById("search-input").value;
+          if (keywordValue) {
+            // 確保關鍵字不是空的
+
+            nextPage = 0;
+
+            keywordInput = keywordValue;
+
+            fetchData(nextPage, keywordInput);
+          }
         });
-    }
 
-//產生捷運按鈕
-fetchAndGenerateOptions();
+      function createElements(data) {
+        const attractions = data["data"];
+        const profile = document.querySelector(".profile");
 
-// 搜尋功能
-document.getElementById("search-button").addEventListener("click", function() {
-  const keywordValue = document.getElementById("search-input").value;
-  if (keywordValue) { // 確保關鍵字不是空的
+        for (let i = 0; i < attractions.length; i++) {
+          let liProfile = document.createElement("li");
+          liProfile.className = `profile-li profile-li-${i + 1}`;
 
-    nextPage = 0;
+          // 為每個 li 添加點擊事件
+          liProfile.addEventListener("click", function () {
+            window.location = `http://127.0.0.1:3000/attraction/${attractions[i].id}`;
+          });
 
-    keywordInput = keywordValue;
-    
-    fetchData(nextPage, keywordInput);
-  }
-});
+          let divCardTop = document.createElement("div");
+          divCardTop.className = "card-top";
+          let divCardBottom = document.createElement("div");
+          divCardBottom.className = "card-bottom";
 
-function createElements(data) {
-      const attractions = data["data"];
-      const profile = document.querySelector(".profile");
+          let imgElement = document.createElement("img");
+          imgElement.src = attractions[i].images[0] || "";
+          imgElement.alt = `profile-img-${i + 1}`;
+          imgElement.className = "main-img";
 
-      for (let i = 0; i < attractions.length; i++) {
-            let liProfile = document.createElement("li");
-            liProfile.className = `profile-li profile-li-${i + 1}`;
-      
-            let divCardTop = document.createElement("div");
-            divCardTop.className = "card-top";
-            let divCardBottom = document.createElement("div");
-            divCardBottom.className = "card-bottom";
-
-            let imgElement = document.createElement("img");
-            imgElement.src = attractions[i].images[0] || "";
-            imgElement.alt = `profile-img-${i + 1}`;
-            imgElement.className = "main-img"; 
-
-            imgElement.onerror = function() {
-              this.onerror = null; // 避免無窮迴圈
-              this.alt = '目前無圖片可顯示'; // 顯示替代文字
-              this.style.textAlign = 'center';
-              this.style.lineHeight = this.height + 'px'; // 設置行高使文字垂直置中
-              this.style.fontWeight = 'bold';
-              this.style.color = '#666';
+          imgElement.onerror = function () {
+            this.onerror = null; // 避免無窮迴圈
+            this.alt = "目前無圖片可顯示";
+            this.style.textAlign = "center";
+            this.style.lineHeight = this.height + "px"; // 設置行高使文字垂直置中
+            this.style.fontWeight = "bold";
+            this.style.color = "#666";
           };
 
-            let divElementTitle = document.createElement("div");
-            divElementTitle.className = `profile-title profile-title-${i + 1}`;
-            let spanElement = document.createElement("span");
-            spanElement.textContent = attractions[i].name;
+          let divElementTitle = document.createElement("div");
+          divElementTitle.className = `profile-title profile-title-${i + 1}`;
+          let spanElement = document.createElement("span");
+          spanElement.textContent = attractions[i].name;
 
-            let divElementCategory = document.createElement("div");
-            divElementCategory.className = `profile-category profile-category-${i + 1}`;
-            divElementCategory.textContent = attractions[i].category;
+          let divElementCategory = document.createElement("div");
+          divElementCategory.className = `profile-category profile-category-${
+            i + 1
+          }`;
+          divElementCategory.textContent = attractions[i].category;
 
-            let divElementMRT = document.createElement("div");
-            divElementMRT.className = `profile-mrt profile-mrt-${i + 1}`;
-            divElementMRT.textContent = attractions[i].mrt;
+          let divElementMRT = document.createElement("div");
+          divElementMRT.className = `profile-mrt profile-mrt-${i + 1}`;
+          divElementMRT.textContent = attractions[i].mrt;
 
-            liProfile.appendChild(divCardTop);
-            divCardTop.appendChild(imgElement);
-            divCardTop.appendChild(divElementTitle);  
-            divElementTitle.appendChild(spanElement);
+          liProfile.appendChild(divCardTop);
+          divCardTop.appendChild(imgElement);
+          divCardTop.appendChild(divElementTitle);
+          divElementTitle.appendChild(spanElement);
 
-            liProfile.appendChild(divCardBottom);
-            divCardBottom.appendChild(divElementCategory);
-            divCardBottom.appendChild(divElementMRT);
-            profile.appendChild(liProfile);
+          liProfile.appendChild(divCardBottom);
+          divCardBottom.appendChild(divElementCategory);
+          divCardBottom.appendChild(divElementMRT);
+          profile.appendChild(liProfile);
         }
-    }
-
-</script>
-</body>
+      }
+    </script>
+  </body>
 </html>
-
