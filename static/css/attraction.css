@@ -221,6 +221,11 @@ label {
     font-weight: bold;
 }
 
+input[type="date"]{
+  padding: 5px 10px 5px 10px;
+  border: none;
+}
+
 input[type="date"],
 input[type="radio"] {
     font-weight: normal;
