@@ -121,13 +121,13 @@
                                     <input type="date" id="photo-date" class="photo-date" placeholder="yyyy/mm/dd">
                                     <br>
                                     <label>選擇時間：</label>
-                                    <input type="radio" id="morning" name="photo-radio" value="上半天">
+                                    <input type="radio" id="morning" value="上半天">
                                     <label for="morning">上半天</label>
-                                    <input type="radio" id="afternoon" name="photo-radio" value="下半天">
+                                    <input type="radio" id="afternoon" value="下半天">
                                     <label for="afternoon">下半天</label>
                                     <br>
-                                    <label for="photo-fee">費用：</label>
-                                    <p id="photo-fee" class="photo-fee">新台幣 2000 元</p>
+                                    <label for="fee">費用：<span id="fee" class="fee">新台幣 2000 元</span></label>
+                                    <br>
                                     <button type="submit">開始預約行程</button>
                                 </form>
                             </div>
@@ -181,7 +181,7 @@
               }
 
               // 費用切換程式碼
-              const feeElement = document.getElementById("photo-fee");
+              const feeElement = document.getElementById("fee");
               const morningRadio = document.getElementById("morning");
               const afternoonRadio = document.getElementById("afternoon");
 

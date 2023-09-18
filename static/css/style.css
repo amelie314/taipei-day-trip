@@ -68,7 +68,7 @@ nav {
   margin-top: 54px;
   /* UI bg  */
   min-height: 320px;
-  background-image: url(https://s3-alpha-sig.figma.com/img/8e51/49c7/686e7b3ebaa358e8438012f5d6a7a7b6?Expires=1694995200&Signature=LWmjn3vIZnf-Wzy9AVzcGhMX5ZMj1h8aIbkh9H5GsR6xnjHYAw6gAHFQqGfbrR-q3uQCTevWWajKoSjwZOTEkeiMaoCGLS~IB9QiHri1VWCMjAbFtEJW40S8diPz9KrELyE8EY05yO4rHFCStYrkw-AEB1bp725ARyhTi9SAOfO0B4mFziqr~Z6AYgyH2FWLwPCmXWpE5IbTX9WpT9kuybHXIYuFWp9RqxgcAJuxnVirsFcNIR8dW6pbdvmd9v4zfjFLAIQxacJVn4R7mtGU2oVoFIz5cb2wruD9EvH0qlBs40lDPR~lCa7lqk1oM2wSUPz9hgvoqnkhsg4~bPqYrQ__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4);
+  background-image: url("../images/welcome.png");
   background-repeat: no-repeat;
   /* background-size: contain   */
   background-position: top;

@@ -195,7 +195,7 @@ nav {
 
 #combined-content p {
   font-size: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 form {
@@ -217,23 +217,51 @@ form p {
 
 label {
     display: inline-block;
-    margin-bottom: 8px;
+    margin-bottom: 15px;
     font-weight: bold;
 }
 
 input[type="date"],
 input[type="radio"] {
+    font-weight: normal;
     margin-bottom: 15px;
-}
+  }
 
+/* 隱藏原生 radio */
 input[type="radio"] {
-    margin-right: 5px;
+  display: none;
 }
 
-#photo-fee {
+/* 創建自定義 radio */
+input[type="radio"] + label {
+  position: relative;
+  padding-left: 30px;  
+  cursor: pointer;
+}
+
+input[type="radio"] + label:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  background-color: #fff;
+  border-radius: 50%;
+}
+
+/* 當 radio 被選中時 */
+input[type="radio"]:checked + label:before {
+  background: #448899;
+  border: 1px solid #ffffff;
+}
+
+#fee {
     margin-bottom: 20px;
     font-size: 16px;
-    color: #333;
+    color: #666;
+    font-weight: normal;
 }
 
 button[type="submit"] {
