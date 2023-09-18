@@ -52,7 +52,7 @@
       //上傳時用：http://3.131.18.21:3000/;
 
       let urlApi = `http://3.131.18.21:3000/`;
-      //let urlApi = `http://127.0.0.1:3000/`;
+      //</script>let urlApi = `http://127.0.0.1:3000/`;
       document.addEventListener("DOMContentLoaded", function () {
         // 找到具有 'logo' 類別的 h1 元素
         const logoElement = document.querySelector(".logo");
@@ -121,12 +121,12 @@
                                     <input type="date" id="photo-date" class="photo-date" placeholder="yyyy/mm/dd">
                                     <br>
                                     <label>選擇時間：</label>
-                                    <input type="radio" id="morning" value="上半天">
+                                    <input type="radio" id="morning" name="photo-radio" value="上半天" checked>
                                     <label for="morning">上半天</label>
-                                    <input type="radio" id="afternoon" value="下半天">
+                                    <input type="radio" id="afternoon" name="photo-radio" value="下半天">
                                     <label for="afternoon">下半天</label>
                                     <br>
-                                    <label for="fee">費用：<span id="fee" class="fee">新台幣 2000 元</span></label>
+                                    <label for="fee">費用：<span id="fee" name="fee-radio" class="fee">新台幣 2000 元</span></label>
                                     <br>
                                     <button type="submit">開始預約行程</button>
                                 </form>

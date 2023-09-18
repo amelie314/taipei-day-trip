@@ -254,7 +254,7 @@ input[type="radio"] + label:before {
 /* 當 radio 被選中時 */
 input[type="radio"]:checked + label:before {
   background: #448899;
-  border: 1px solid #ffffff;
+  border: 2px solid #ffffff;
 }
 
 #fee {
