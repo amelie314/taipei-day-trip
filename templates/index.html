@@ -108,7 +108,7 @@
           keyword ? keyword : "全部"
         );
 
-        let apiUrl = `${urlApi}api/attractions?page=${page}`;
+        let apiUrl = `http://3.131.18.21:3000/api/attractions?page=${page}`;
         if (keyword) {
           apiUrl += `&keyword=${keyword}`;
         }
