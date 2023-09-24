@@ -1,67 +1,4 @@
-*, *::before, *:after {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-size: 20px;
-  font-family: Noto Sans TC;
-  border: 1px solid black;
-}
-header {
-  height: 54px;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #ffffff;
-  font-size: 20px;
-  color: #0E3C33;
-  font-weight: bold;
-}
-
-.logo{
-  font-size: 30px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 34px; 
-  color: #448899;
-  cursor: pointer;
-}
-
-header {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 2;
-}
-
-nav {
-  width: 1200px;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-}
-.menu-items {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-}
-.menu-items li {
-  margin-left: 20px;
-}
-.menu-items li a {
-  /* 修改nav items文字 */
-  font-family: Noto Sans TC;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 13.3px; 
-  text-decoration: none;
-  color: #666666;
-}
+@import "base";
 
 .banner {
   /* UI fixed */
@@ -85,7 +22,7 @@ nav {
   /* justify-content: flex-start; */
   /* align-items: flex-start; */
 }
-.banner h2 {
+.banner-title {
   /* UI bg */
   margin-top: 85px;
   margin-bottom: 15px;
@@ -95,12 +32,10 @@ nav {
   color: var(--secondary-color-gray-10, #f8f8f8);
   text-shadow: 0px 0px 30px #abc;
 }
-.banner p {
-  /* UI bg */
+.banner-describe{
   margin-bottom: 25px;
   /* UI */
   font-size: 16px;
-  font-weight: 700;
   color: var(--secondary-color-gray-10, #f8f8f8);
 }
 .search-bar {
@@ -122,6 +57,7 @@ nav {
   /* UI word */
   padding: 15px;
   font-weight: 700;
+  border-radius: 0 4px 0 4px;
 }
 
 #search-button {
@@ -265,27 +201,6 @@ main {
   margin: 5px;
   font-size: 14px;
 }
-
-footer {
-  width: 100%;  /* 設定寬度為 100% */
-  padding: 0;
-  height: 104px;  /* 設定高度為 104px */
-  background-color: #757575; 
-  display: flex;
-  align-items: center;  
-  justify-content: center; 
-  bottom: 0;
-  z-index: 999;
-}
-
-
-.footer-text-box {
-  font-size: 16px;  
-  font-weight: 700;  
-  line-height: 13px;  
-  color: white;
-}
-
 
 @media (min-width: 350px)and (max-width: 1200px) {
   .banner-text {
