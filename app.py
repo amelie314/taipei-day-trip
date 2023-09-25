@@ -169,13 +169,13 @@ def login():
             return jsonify({'error': True, 'message' : '登入失敗，Email 或密碼錯誤。'}), 400
     except mysql.connector.Error as err:
         print(f"資料庫錯誤：{err}")
-        return jsonify({'error': True, 'message' :  str(err)}), 500
+        return jsonify({'error': True, 'message' : "資料庫錯誤"}), 500
     except TypeError as err:
         print(f"類型錯誤：{err}")
         return jsonify({'error': True, 'message' :  '伺服器錯誤：不可序列化的物件'}), 500
     except Exception as err:
-        print(f"伺服器錯誤：{err}")
-        return jsonify({'error': True, 'message' : '伺服器錯誤'}), 500
+        print(f"未知錯誤：{err}")
+        return jsonify({'error': True, 'message' :  str(err)}), 500
     finally:
         cursor.close()
         db.close()
