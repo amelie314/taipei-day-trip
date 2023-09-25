@@ -1,14 +1,15 @@
 /** @format */
 //ubuntu server IP & PORT
-//let urlApi = `http://3.131.18.21:3000/`; //上傳時用
-let urlApi = `http://127.0.0.1:3000/`; // 開發時用
+//let RemoteURL = `http://3.131.18.21:3000/`; //上傳時用
+// let LocalURL = `http://127.0.0.1:3000/`; // 開發時用
 
 document.addEventListener("DOMContentLoaded", function () {
   const logoElement = document.querySelector(".logo");
 
   // 為這個 h1 元素添加 click 事件監聽器
   logoElement.addEventListener("click", function () {
-    window.location = urlApi;
+    // window.location = RemoteURL;
+    window.location = "/";
   });
 });
 
@@ -28,7 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
     indicators[currentImageIndex].classList.add("active");
   }
 
-  fetch(`${urlApi}api/attraction/${lastSegment}`)
+  // fetch(`${RemoteURL}api/attraction/${lastSegment}`)
+  fetch(`/api/attraction/${lastSegment}`)
     .then((response) => response.json())
     .then((data) => {
       if (data && data.data) {

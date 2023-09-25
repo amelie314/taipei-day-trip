@@ -40,7 +40,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // 為這個 h1 元素添加 click 事件監聽器
   logoElement.addEventListener("click", function () {
     // 使用 urlApi 進行導航
-    window.location = urlApi;
+    // window.location = urlApi;
+    window.location = "/";
   });
 
   const modal = document.getElementById("auth-modal");

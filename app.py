@@ -1,11 +1,10 @@
 from flask import Flask, render_template, jsonify, request
 import mysql.connector
-import os
 import re
+import os
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
-from jwt import encode
-from jwt import decode
+from jwt import encode, decode
 import datetime
 from functools import wraps  #token驗證
 
@@ -15,12 +14,13 @@ app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
+# 一定要先有 dotenv
+load_dotenv()
+
 secret_key = os.environ.get("SECRET_KEY")
 app.config["SECRET_KEY"]= secret_key
 
-load_dotenv()
 password = os.environ.get("PASSWORD")
-
 
 # 資料庫連接設定
 db_config = {
@@ -62,9 +62,11 @@ def encode_auth_token(user_id, username, email):
                 'email': email
             }
         }
-        return encode(payload, app.config["SECRET_KEY"], algorithm='HS256')
+        token = encode(payload, app.config["SECRET_KEY"], algorithm='HS256')
+        return token
+        
     except Exception as e:
-        return e
+        return str(e) # 回傳錯誤訊息
     
 # 解碼 JWT 函式
 def decode_token(token):
@@ -144,31 +146,36 @@ def register():
 # 登入
 @app.route("/api/user/auth", methods=['PUT'])
 def login():
+    
     # 取得請求資料
     data = request.json
     email = data.get('email')
     password = data.get('password')
 
+    # 連接資料庫 
     db = mysql.connector.connect(**db_config)
     cursor = db.cursor(dictionary=True)
 
     try:
+        # 找出 email 對應的使用者
         cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
         user = cursor.fetchone()
 
-        if user and check_password_hash(user['password'], password):
-            
+        if user and check_password_hash(user['password'], password):            
             token = encode_auth_token(user['id'], user['name'], user['email'])
             
             return jsonify({'token': token}), 200
         else:
-            return jsonify({'error': '登入失敗，Email 或密碼錯誤。'}), 400
+            return jsonify({'error': True, 'message' : '登入失敗，Email 或密碼錯誤。'}), 400
     except mysql.connector.Error as err:
         print(f"資料庫錯誤：{err}")
-        return jsonify({'error': str(err)}), 500
+        return jsonify({'error': True, 'message' :  str(err)}), 500
+    except TypeError as err:
+        print(f"類型錯誤：{err}")
+        return jsonify({'error': True, 'message' :  '伺服器錯誤：不可序列化的物件'}), 500
     except Exception as err:
         print(f"伺服器錯誤：{err}")
-        return jsonify({'error': '伺服器錯誤'}), 500
+        return jsonify({'error': True, 'message' : '伺服器錯誤'}), 500
     finally:
         cursor.close()
         db.close()

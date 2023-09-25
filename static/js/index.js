@@ -1,7 +1,7 @@
 /** @format */
 //ubuntu server IP & PORT
-//let urlApi = `http://3.131.18.21:3000/`; //上傳時用
-let urlApi = `http://127.0.0.1:3000/`; // 開發時用
+//let RemoteURL = `http://3.131.18.21:3000/`; //上傳時用
+// let LocalURL = `http://127.0.0.1:3000/`; // 開發時用
 
 let isLoading = false;
 let keywordInput = "";
@@ -22,7 +22,8 @@ function fetchData(page, keyword = "") {
     keyword ? keyword : "全部"
   );
 
-  let apiUrl = `${urlApi}api/attractions?page=${page}`;
+  let apiUrl = `/api/attractions?page=${page}`;
+  // let apiUrl = `${RemoteURL}api/attractions?page=${page}`;
   if (keyword) {
     apiUrl += `&keyword=${keyword}`;
   }
@@ -119,7 +120,8 @@ document.addEventListener("DOMContentLoaded", function () {
 function fetchAndGenerateOptions() {
   console.log("triggered!");
 
-  fetch(`${urlApi}api/mrts`)
+  // fetch(`${RemoteURL}api/mrts`)
+  fetch(`/api/mrts`)
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
@@ -166,7 +168,8 @@ function createElements(data) {
 
     // 為每個 li 添加點擊事件
     liProfile.addEventListener("click", function () {
-      window.location = `${urlApi}attraction/${attractions[i].id}`;
+      // window.location = `${RemoteURL}attraction/${attractions[i].id}`;
+      window.location = `attraction/${attractions[i].id}`;
     });
 
     let divCardTop = document.createElement("div");
