@@ -161,6 +161,15 @@ nav {
   text-align: center;
 }
 
+#switch-to-register, #switch-to-login {
+  cursor: pointer;
+}
+
+#switch-to-register:hover, #switch-to-login:hover {
+  color: #448899;
+  transition: ease-in-out 0.2s;
+}
+
 /* footer */
 footer {
   width: 100%;

@@ -177,7 +177,7 @@ nav {
   margin-bottom: 15px;
 }
 
-form {
+.booking-form {
     background: #E8E8E8;
     padding: 20px;
     font-size: 16px;
@@ -189,7 +189,7 @@ form {
     color:#666;
 }
 
-form p {
+.booking-form  p {
     margin-bottom: 15px;
     font-size: 18px;
 }
@@ -267,7 +267,7 @@ button[type="submit"] {
 }
 
 @media(max-width: 1200px){
-  form {
+  .booking-form  {
     width: 100%;
   }
   #combined-content {
@@ -297,7 +297,7 @@ button[type="submit"] {
         max-width: 90%;
         margin-top: 50px;
     }
-    form {
+    .booking-form  {
       /* margin, width... */
         padding: 15px 20px ;
         height: 302px;

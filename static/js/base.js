@@ -14,25 +14,29 @@ document.addEventListener("DOMContentLoaded", function () {
       if (data.data) {
         // 使用者已登入
         authTextElement.innerText = "登出系統";
-
-        authTextElement.addEventListener("click", function (event) {
-          event.preventDefault();
-          // 進行登出邏輯，例如清除 token
-          localStorage.removeItem("token");
-          window.location.reload();
-        });
+        authTextElement.removeEventListener("click", loginEvent);
+        authTextElement.addEventListener("click", logOutEvent);
       }
     })
     .catch((err) => {
       authTextElement.innerText = "登入/註冊";
-
-      authTextElement.addEventListener("click", function (event) {
-        event.preventDefault();
-        // 顯示登入/註冊模態視窗
-        const modal = document.getElementById("auth-modal");
-        modal.style.display = "flex";
-      });
+      authTextElement.removeEventListener("click", logOutEvent);
+      authTextElement.addEventListener("click", loginEvent);
     });
+  function logOutEvent(event) {
+    event.preventDefault();
+    // 進行登出邏輯，例如清除 token
+    modal.style.display = "none";
+
+    localStorage.removeItem("token");
+    window.location.reload();
+  }
+
+  function loginEvent(event) {
+    event.preventDefault();
+    // 顯示登入/註冊模態視窗
+    modal.style.display = "flex";
+  }
 
   // 找到具有 'logo' 類別的 h1 元素
   const logoElement = document.querySelector(".logo");

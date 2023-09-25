@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <div id="combined-content">
                                 <h1>${name}</h1>
                                 <p>${category} at ${mrt}</p>
-                                <form>
+                                <form class="booking-form">
                                     <h4 class="p-bold">訂購導覽行程</h4>
                                     <p>以此景點為中心的一日行程，帶您探索城市角落故事</p>
                                     <label for="photo-date">選擇日期：</label>
