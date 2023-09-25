@@ -1,0 +1,26 @@
+<!-- @format -->
+
+{% extends "base.html" %} {% block title %} 台北一日遊-景點 {% endblock %} {%
+block head_extra %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/attraction.css') }}"
+/>
+<script src="{{ url_for('static', filename='js/attraction.js') }}"></script>
+{% endblock %} {% block content %}
+<main id="main-content">
+  <div id="image-slider-wrapper">
+    <div id="image-slider" class="slider"></div>
+    <button id="prevBtn" class="slider-btn slider-btn-prev">
+      <img src="../static/images/button/btn_leftArrow.png" alt="上一頁" />
+    </button>
+    <button id="nextBtn" class="slider-btn slider-btn-next">
+      <img src="../static/images/button/btn_rightArrow.png" alt="下一頁" />
+    </button>
+    <div id="indicators" class="indicators"></div>
+  </div>
+  <div id="booking-info"></div>
+</main>
+<div class="separator"></div>
+<div id="additional-info"></div>
+{% endblock %}

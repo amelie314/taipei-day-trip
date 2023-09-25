@@ -1,0 +1,111 @@
+<!-- @format -->
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %} 台北一日遊-模板 {% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+    />
+    <script
+      src="https://kit.fontawesome.com/53c20d969e.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/base.css') }}"
+    />
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+    {% block head_extra %} {% endblock %}
+    <!-- base.css -->
+  </head>
+
+  <body>
+    <div class="modal" id="auth-modal">
+      <div class="modal-content">
+        <div class="gradient-bar"></div>
+        <span class="close-btn" id="close-modal">&times;</span>
+        <!-- 登入表單 -->
+        <form id="login-form">
+          <h3 class="form-heading">登入會員帳號</h3>
+          <input
+            type="email"
+            class="form-input"
+            id="login-email"
+            placeholder="輸入電子信箱"
+            required
+          />
+          <input
+            type="password"
+            class="form-input"
+            id="login-password"
+            placeholder="輸入密碼"
+            required
+          />
+          <button type="submit" class="form-button" id="login-button">
+            登入
+          </button>
+          <div id="login-error-message"></div>
+          <p class="form-text">
+            還沒有帳戶？<span id="switch-to-register">點此註冊</span>
+          </p>
+        </form>
+
+        <!-- 註冊表單 -->
+        <form id="register-form" style="display: none">
+          <h3 class="form-heading">註冊會員帳號</h3>
+          <input
+            type="text"
+            class="form-input"
+            id="register-name"
+            placeholder="姓名"
+            required
+          />
+          <input
+            type="email"
+            class="form-input"
+            id="register-email"
+            placeholder="電子郵件"
+            required
+          />
+          <input
+            type="password"
+            class="form-input"
+            id="register-password"
+            placeholder="密碼"
+            required
+          />
+          <button type="submit" class="form-button" id="register-button">
+            註冊新帳戶
+          </button>
+          <div id="register-error-message"></div>
+          <p class="form-text">
+            已經有帳戶了？<span id="switch-to-login">點此登入</span>
+          </p>
+        </form>
+      </div>
+    </div>
+    <header>
+      <nav>
+        <h1 class="logo">台北一日遊</h1>
+        <ul class="menu-items">
+          <li><a href="#">預留行程</a></li>
+          <li class="login-in-out-button"><a href="#">登入/註冊</a></li>
+        </ul>
+      </nav>
+    </header>
+    {% block content %}
+
+    <!-- html elements...main... -->
+
+    <!-- script -->
+
+    {% endblock %}
+    <footer>
+      <div class="footer-text-box">COPYRIGHT © 2021 台北一日遊</div>
+    </footer>
+    <script></script>
+  </body>
+</html>
