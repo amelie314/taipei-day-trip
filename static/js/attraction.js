@@ -11,11 +11,67 @@ document.addEventListener("DOMContentLoaded", function () {
     // window.location = RemoteURL;
     window.location = "/";
   });
-});
+  // 使用事件代理為動態生成的按鈕添加事件監聽器
+  document.body.addEventListener("click", async function (event) {
+    // 確定是否是「開始預約行程」按鈕
+    if (
+      event.target &&
+      event.target.matches('.booking-form button[type="submit"]')
+    ) {
+      event.preventDefault();
 
-document.addEventListener("DOMContentLoaded", () => {
+      // 檢查是否已登入
+      const token = localStorage.getItem("token");
+      if (!token) {
+        // 若未登入，顯示登入模態視窗
+        // ... 插入您的模態視窗代碼 ...
+        return;
+      }
+
+      // 若已登入，建立新的預定行程
+      const date = document.getElementById("photo-date").value;
+      if (!date) {
+        alert("請選擇日期");
+        return;
+      }
+
+      const morningRadio = document.getElementById("morning");
+      const afternoonRadio = document.getElementById("afternoon");
+
+      const time = morningRadio.checked ? "morning" : "afternoon";
+      const price = morningRadio.checked ? 2000 : 2500;
+
+      console.log(lastSegment, date, time, price);
+
+      try {
+        const response = await fetch("/api/booking", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify({
+            attractionId: lastSegment,
+            date: date, // 格式為 "YYYY-MM-DD"
+            time: time, // "morning" 或 "afternoon"
+            price: price, // 新台幣 2000 元 或 2500 元
+          }),
+        });
+
+        const data = await response.json();
+        if (data.ok) {
+          // window.location.href = "/booking";
+        } else {
+          // 處理錯誤，例如顯示錯誤訊息
+        }
+      } catch (error) {
+        console.error("發生錯誤:", error);
+      }
+    }
+  });
   const path = window.location.pathname;
   const lastSegment = path.split("/").pop();
+
   let currentImageIndex = 0;
   let images;
 
@@ -68,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     <h4 class="p-bold">訂購導覽行程</h4>
                                     <p>以此景點為中心的一日行程，帶您探索城市角落故事</p>
                                     <label for="photo-date">選擇日期：</label>
-                                    <input type="date" id="photo-date" class="photo-date" placeholder="yyyy/mm/dd">
+                                    <input type="date" id="photo-date" class="photo-date" placeholder="yyyy/mm/dd" required>
                                     <br>
                                     <label>選擇時間：</label>
                                     <input type="radio" id="morning" name="photo-radio" value="上半天" checked>
