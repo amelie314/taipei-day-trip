@@ -71,8 +71,11 @@ def encode_auth_token(user_id, username, email):
 # 解碼 JWT 函式
 def decode_token(token):
     try:
-        # 在這裡，'你的JWT密鑰' 應該和你用於編碼 JWT 的密鑰相同
+        if isinstance(token, str):
+            token = token.encode('utf-8')
+        
         decoded_data = decode(token, app.config["SECRET_KEY"], algorithms=['HS256'])
+        
         return decoded_data['sub'], None  # 回傳解碼後的資料和 None（代表沒有錯誤）
     except Exception as e:
         return None, str(e)  # 回傳 None 和錯誤訊息
@@ -80,20 +83,22 @@ def decode_token(token):
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        
         token = request.headers.get('Authorization')
         # 去除 Bearer 但我剛才消除了
         # token = auth_header.split(" ")[1] if auth_header else None
-
+        
         if not token:
-            return jsonify({'message': 'Token 缺失'}), 403
+            return jsonify({"message": 'Token 缺失'}), 403
         
         try:
             user_data, err = decode_token(token)  # 使用 decode_token 函數
+            
+            
             if err:
                 raise Exception(err)
+            
         except Exception as e:
-            return jsonify({'message': f'Token 無效或過期: {str(e)}'}), 403
+            return jsonify({"message": f'Token 無效或過期: {str(e)}'}), 403
         return f(user_data, *args, **kwargs)
     return decorated
 
@@ -166,40 +171,66 @@ def login():
             
             return jsonify({'token': token}), 200
         else:
-            return jsonify({'error': True, 'message' : '登入失敗，Email 或密碼錯誤。'}), 400
+            return jsonify({"error": True, "message" : '登入失敗，Email 或密碼錯誤。'}), 400
     except mysql.connector.Error as err:
         print(f"資料庫錯誤：{err}")
-        return jsonify({'error': True, 'message' : "資料庫錯誤"}), 500
+        return jsonify({"error": True, "message" : "資料庫錯誤"}), 500
     except TypeError as err:
         print(f"類型錯誤：{err}")
-        return jsonify({'error': True, 'message' :  '伺服器錯誤：不可序列化的物件'}), 500
+        return jsonify({"error": True, "message" :  '伺服器錯誤：不可序列化的物件'}), 500
     except Exception as err:
         print(f"未知錯誤：{err}")
-        return jsonify({'error': True, 'message' :  str(err)}), 500
+        return jsonify({"error": True, "message" :  str(err)}), 500
     finally:
         cursor.close()
         db.close()
 
 # 取得使用者資料        
 @app.route("/api/user/auth", methods=['GET'])
-@token_required  # 如果你有 token 驗證的裝飾器
+# @token_required
 def get_user_auth(user_data=None):  # 更改名稱，user_data 從裝飾器中獲取
+    token = request.headers.get('Authorization')
 
-    print
-    
-    if not user_data:
+    if not token:
+        return jsonify({"data": None}), 200
+        
+    try:
+        user_data, err = decode_token(token)  # 使用 decode_token 函數
+        
+        if err:
+            raise Exception(err)
+        
+        if not user_data:
+            return jsonify({"data": None}), 200
+        
+        return jsonify(
+            {"data":
+                {
+                    "id": user_data.get("user_id"),
+                    "name": user_data.get("username"),
+                    "email": user_data.get("email")
+                }
+            }
+        ), 200
+        
+    except Exception as e:
         return jsonify({"data": None}), 200
     
-    return jsonify({"data": user_data}), 200
+
  
 @app.route("/")
 def index():
     return render_template("index.html")
 
+# @app.route("/booking")
+# def booking():
+#     return render_template("booking.html")
 @app.route("/booking")
 def booking():
     return render_template("booking.html")
 
+
+#取得尚未確認的預定行程
 @app.route("/api/booking", methods=['GET'])
 @token_required
 def get_booking(user_data):
@@ -237,14 +268,15 @@ def get_booking(user_data):
         return jsonify(response_data), 200
     except mysql.connector.Error as err:
         print(f"資料庫錯誤：{err}")
-        return jsonify({'error': True, 'message': "資料庫錯誤"}), 500
+        return jsonify({"error": True, "message": "資料庫錯誤"}), 500
     except Exception as err:
         print(f"伺服器錯誤：{err}")
-        return jsonify({'error': True, 'message': str(err)}), 500
+        return jsonify({"error": True, "message": str(err)}), 500
     finally:
         cursor.close()
         db.close()
         
+#建立新的預定行程       
 @app.route("/api/booking", methods=['POST'])
 @token_required
 def create_booking(user_data):
@@ -262,11 +294,17 @@ def create_booking(user_data):
 
     db = mysql.connector.connect(**db_config)
     cursor = db.cursor(dictionary=True)
-
+    
+    cursor.execute("SELECT * FROM bookings WHERE user_id = %s", (user_id,))
+    existing_booking = cursor.fetchone()
+    
     try:
-        # 插入新的預定資料
-        cursor.execute("INSERT INTO bookings (user_id, attraction_id, date, time, price) VALUES (%s, %s, %s, %s, %s)",
-                       (user_id, attraction_id, date, time, price))
+        if existing_booking:
+            cursor.execute("UPDATE bookings SET attraction_id = %s, date = %s, time = %s, price = %s WHERE user_id = %s",
+                      (attraction_id, date, time, price, user_id))
+        else:
+            cursor.execute("INSERT INTO bookings (user_id, attraction_id, date, time, price) VALUES (%s, %s, %s, %s, %s)",
+                      (user_id, attraction_id, date, time, price))
         db.commit()
 
         return jsonify({"ok": True}), 200

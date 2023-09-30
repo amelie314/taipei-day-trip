@@ -1,11 +1,119 @@
 <!-- @format -->
 
-{% extends "base.html" %} {% block title %} 台北一日遊-景點 {% endblock %}
-{%block head_extra %}{% endblock %}
-<!-- <link
+{% extends "base.html" %} {% block title %} 台北一日遊-預定 {% endblock %}
+{%block head_extra %}
+<link
   rel="stylesheet"
-  href="{{ url_for('static', filename='css/booking.css') }}"
+  href="{{ url_for('static', filename='css/booking.min.css') }}"
 />
-<script src="{{ url_for('static', filename='js/booking.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/booking.js') }}"></script>
+{% endblock %} {% block content %}
 
-{% block content %} {% endblock %}
+<!-- 景點資訊部分 -->
+<div class="container-wrapper">
+<main class="container">
+  <div class="booking-max-width">
+  <div class="welcome">
+    您好，<span class="welcome-title"></span>，待預定的行程如下：
+  </div>
+  <div class="attraction-info">
+    <img class="attraction-image" alt="景點圖片" src="" />
+    <div class="attraction-booking-list">
+      <h5 class="attraction-booking-title">
+        台北一日遊：<span class="attraction-name"></span>
+      </h5>
+      <p class="attraction-subtitle">
+        日期：<span class="attraction-content attraction-date"></span>
+      </p>
+      <p class="attraction-subtitle">
+        時間：<span class="attraction-content attraction-time"></span>
+      </p>
+      <p class="attraction-subtitle">
+        價格：<span class="attraction-content attraction-price"></span>
+      </p>
+      <p class="attraction-subtitle">
+        地址：<span class="attraction-content attraction-address"></span>
+      </p>
+    </div>
+    <!-- url-for delete.png  -->
+    <img class="delete-attraction" alt="" width="30px" src="{{ url_for('static', filename='images/delete.png') }}" />
+  </div>
+</div>
+  <div class="separator-booking first-separator"></div>
+
+  <!-- 使用者預定資訊部分
+  <div class="user-booking-info">
+    <p>聯絡姓名：<span class="user-name">Yakko</span></p>
+    <p>聯絡信箱：<span class="user-email">wehelp@pada-x.com</span></p>
+  </div> -->
+  <div class="booking-max-width user-booking-info">
+    <h3 class="booking-title">您的聯絡資訊</h3>
+    <form id="user-info-form">
+      <div>
+        <label for="user-name">聯絡姓名：</label>
+        <input  class="input-system" type="text" id="user-name" name="user-name" value="" required />
+      </div>
+      <div>
+        <label for="user-email">聯絡信箱：</label>
+        <input class="input-system" 
+          type="email"
+          id="user-email"
+          name="user-email"
+          value=""
+          required
+        />
+      </div>
+      <div>
+        <label for="user-phone">手機號碼：</label>
+        <input class="input-system" 
+          type="number"
+          id="user-phone"
+          name="user-phone"
+          value=""
+          required
+        />
+      </div>
+      <p class="user-warning">
+        請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。
+      </p>
+  </div>
+  <div class="separator-booking second-separator"></div>
+  <!-- 付款資訊部分 -->
+  <div class="booking-max-width payment-info">
+    <h3 class="booking-title">信用卡付款資訊</h3>
+    <div>
+    <label for="card-number">卡片號碼：</label>
+    <input class="input-system" 
+      type="text"
+      id="card-number"
+      name="card-number"
+      placeholder="請輸入信用卡號碼"
+      required
+    />
+    </div>
+    <div>
+    <label for="expiration-date">有效期限：</label>
+    <input class="input-system" 
+      type="text"
+      id="expiration-date"
+      name="expiration-date"
+      placeholder="MM / YY"
+      required
+    />
+    </div>
+    <div>
+    <label for="cvv">信用卡背面三碼：</label>
+    <input  class="input-system" type="text" id="cvv" name="cvv" placeholder="CVV" required />
+    </div>
+  </div>
+  <div class="separator-booking third-separator"></div>
+  <div class="booking-max-width total-price-div">
+    <div class="total-price-list">
+      <p class="total-price-title">總價：<span class="total-price-number"></span></p>
+      <button type="submit">確認訂購並付款</button>
+    </div>
+  </div>
+</form>
+</main>
+</div>
+{% endblock %}

@@ -195,3 +195,175 @@ footer {
   line-height: 13px;
   color: white;
 }
+
+.container-wrapper {
+  background-color: white;
+}
+
+.container {
+  margin-top: 54px;
+  max-width: 1200px;
+  margin: 54px auto 0 auto;
+  color: #666666;
+}
+
+.booking-max-width {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.welcome {
+  font-size: 19px;
+  line-height: 16px;
+  font-weight: 700;
+  color: #666666;
+  padding-top: 46px;
+  margin-bottom: 35px;
+}
+
+.attraction-info {
+  display: flex;
+  gap: 22px;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.attraction-info .attraction-image {
+  max-width: 266px;
+  object-fit: cover;
+  padding: 0 8px;
+}
+
+.attraction-info .attraction-booking-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.attraction-info .attraction-booking-title {
+  font-weight: 700;
+  color: #448899;
+  margin-bottom: 20px;
+  padding: 5px 0;
+}
+
+.attraction-info .attraction-subtitle {
+  font-size: 16px;
+  color: #666666;
+  margin-bottom: 10px;
+  font-weight: 700;
+  padding: 5px 0;
+}
+
+.attraction-info .attraction-content {
+  font-weight: 500;
+}
+
+.attraction-info .delete-attraction {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+.separator-booking {
+  border-top: 1px solid #ccc;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.attraction-info p {
+  margin: 0;
+  font-size: 18px;
+  /* 調整字體大小 */
+}
+
+.booking-title {
+  font-size: 19px;
+  line-height: 16px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.input-system {
+  font-weight: 500;
+  font-size: 16px;
+  font-style: normal;
+  line-height: 13.3px;
+  background-color: #fff;
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.user-booking-info {
+  margin-top: 40px;
+}
+
+.user-booking-info .user-warning {
+  font-weight: 700;
+  margin-top: 5px;
+  margin-bottom: 45px;
+}
+
+.payment-info {
+  margin-top: 40px;
+  margin-bottom: 25px;
+}
+
+.total-price-div {
+  margin-top: 40px;
+  margin-bottom: 62px;
+  display: flex;
+  justify-content: end;
+}
+
+.total-price-div .total-price-list {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+.total-price-div .total-price-title {
+  font-weight: 700;
+  margin-bottom: 22px;
+}
+
+.total-price-div button[type="submit"] {
+  padding: 10px 20px;
+  background-color: #448899;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 19px;
+  line-height: 16px;
+}
+
+@media (max-width: 1200px) {
+  body {
+    line-height: normal;
+  }
+  .booking-max-width {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 550px) {
+  .attraction-info {
+    flex-direction: column;
+  }
+  .attraction-info {
+    max-width: auto;
+  }
+  .attraction-info .attraction-image {
+    max-width: 100%;
+  }
+  .attraction-info .delete-attraction {
+    top: auto;
+    bottom: 0;
+    right: 0;
+  }
+}

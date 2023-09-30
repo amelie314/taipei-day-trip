@@ -23,8 +23,9 @@ document.addEventListener("DOMContentLoaded", function () {
       // 檢查是否已登入
       const token = localStorage.getItem("token");
       if (!token) {
+        const modal = document.getElementById("auth-modal");
+        modal.style.display = "block";
         // 若未登入，顯示登入模態視窗
-        // ... 插入您的模態視窗代碼 ...
         return;
       }
 
@@ -41,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const time = morningRadio.checked ? "morning" : "afternoon";
       const price = morningRadio.checked ? 2000 : 2500;
 
-      console.log(lastSegment, date, time, price);
+      // console.log(lastSegment, date, time, price); // 測試用
 
       try {
         const response = await fetch("/api/booking", {
@@ -60,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const data = await response.json();
         if (data.ok) {
-          // window.location.href = "/booking";
+          window.location.href = "/booking";
         } else {
           // 處理錯誤，例如顯示錯誤訊息
         }
