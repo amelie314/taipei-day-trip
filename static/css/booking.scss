@@ -1,0 +1,170 @@
+@import "base";
+
+// body, html {
+//     background-color: #757575; 
+// }
+.container-wrapper {
+    background-color: white;
+}
+.container {
+    margin-top: 54px;
+    max-width: $max-width;
+    margin: 54px auto 0 auto;
+    color: $secondary-color;
+}
+// 最多1000px;
+.booking-max-width {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.welcome {
+    @include button-text;
+    font-weight: 700;
+    color: $secondary-color;
+    padding-top: 46px;
+    margin-bottom: 35px;
+}
+.attraction-info {
+    display: flex;
+    gap: 22px;
+    margin-bottom: 40px;
+
+    position: relative;
+
+    .attraction-image {
+        max-width: 266px;
+        object-fit: cover;
+        padding: 0 8px;
+    }
+    .attraction-booking-list {
+        display: flex;
+        flex-direction: column;
+    }
+    .attraction-booking-title {
+        font-weight: 700;
+        color: $primary-color;
+        margin-bottom: 20px;
+        padding: 5px 0;
+    }
+    .attraction-subtitle {
+        font-size: 16px;
+        color: $secondary-color;
+        margin-bottom: 10px;
+        font-weight: 700;
+        padding: 5px 0;
+    }
+    .attraction-content {
+        font-weight: 500;
+    }
+    .delete-attraction {
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+    }
+}
+
+//hr
+.separator-booking {
+    border-top: 1px solid #ccc;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.attraction-info p {
+    margin: 0;
+
+    font-size: 18px; /* 調整字體大小 */
+}
+
+.booking-title {
+    @include button-text;
+    font-weight: 700;
+    margin-bottom: 24px;
+
+}
+.input-system {
+    @include input-default;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+.user-booking-info {
+    margin-top: 40px;
+
+    .user-warning {
+        font-weight: 700;
+        margin-top: 5px;
+        margin-bottom: 45px;
+    }
+}
+.payment-info {
+    margin-top: 40px;
+    margin-bottom:25px;
+}
+// 付款要在右邊
+.total-price-div{
+    margin-top:40px;
+    margin-bottom: 62px;
+    display: flex;
+    justify-content: end;
+
+    .total-price-list {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+    }
+
+    .total-price-title{
+        font-weight: 700;
+        margin-bottom: 22px;
+    }
+    button[type="submit"] {
+        padding: 10px 20px;
+        background-color: #448899;
+        color: white;
+        border: none;
+        border-radius: $basic-border-radius;
+        cursor: pointer;
+        @include button-text;
+    }
+}
+
+
+@media (max-width: 1200px) {
+    // 外圍要留空
+    body {
+        line-height: normal;
+    }
+    // 垃圾桶要在右下
+    // 上面圖片文字要上下
+    .booking-max-width {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    
+}
+
+@media (max-width: 550px)  {
+    .attraction-info {
+        flex-direction: column;
+    }
+    // 垃圾桶要在右下
+    // 上面圖片文字要上下
+    .attraction-info {
+        max-width: auto;
+
+        .attraction-image {
+            max-width: 100%;
+        }
+        .delete-attraction {
+            top: auto;
+            bottom: 0;
+            right: 0;
+        }
+    }
+}
+
+
+
+

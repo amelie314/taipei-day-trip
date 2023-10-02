@@ -18,6 +18,10 @@ body {
   font-family: "Noto Sans TC", sans-serif;
 }
 
+main {
+  background: white;
+}
+
 header {
   height: 54px;
   padding: 10px;
@@ -181,7 +185,6 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 120px;
   bottom: 0;
   z-index: 999;
 }
@@ -273,7 +276,7 @@ footer {
 }
 
 main {
-  margin: 50px auto 250px auto;
+  margin: 50px auto 40px auto;
   max-width: 1200px;
 }
 

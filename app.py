@@ -71,8 +71,11 @@ def encode_auth_token(user_id, username, email):
 # 解碼 JWT 函式
 def decode_token(token):
     try:
-        # 在這裡，'你的JWT密鑰' 應該和你用於編碼 JWT 的密鑰相同
+        if isinstance(token, str):
+            token = token.encode('utf-8')
+        
         decoded_data = decode(token, app.config["SECRET_KEY"], algorithms=['HS256'])
+        
         return decoded_data['sub'], None  # 回傳解碼後的資料和 None（代表沒有錯誤）
     except Exception as e:
         return None, str(e)  # 回傳 None 和錯誤訊息
@@ -80,20 +83,22 @@ def decode_token(token):
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        
         token = request.headers.get('Authorization')
         # 去除 Bearer 但我剛才消除了
         # token = auth_header.split(" ")[1] if auth_header else None
-
+        
         if not token:
-            return jsonify({'message': 'Token 缺失'}), 403
+            return jsonify({"message": 'Token 缺失'}), 403
         
         try:
             user_data, err = decode_token(token)  # 使用 decode_token 函數
+            
+            
             if err:
                 raise Exception(err)
+            
         except Exception as e:
-            return jsonify({'message': f'Token 無效或過期: {str(e)}'}), 403
+            return jsonify({"message": f'Token 無效或過期: {str(e)}'}), 403
         return f(user_data, *args, **kwargs)
     return decorated
 
@@ -166,39 +171,154 @@ def login():
             
             return jsonify({'token': token}), 200
         else:
-            return jsonify({'error': True, 'message' : '登入失敗，Email 或密碼錯誤。'}), 400
+            return jsonify({"error": True, "message" : '登入失敗，Email 或密碼錯誤。'}), 400
     except mysql.connector.Error as err:
         print(f"資料庫錯誤：{err}")
-        return jsonify({'error': True, 'message' : "資料庫錯誤"}), 500
+        return jsonify({"error": True, "message" : "資料庫錯誤"}), 500
     except TypeError as err:
         print(f"類型錯誤：{err}")
-        return jsonify({'error': True, 'message' :  '伺服器錯誤：不可序列化的物件'}), 500
+        return jsonify({"error": True, "message" :  '伺服器錯誤：不可序列化的物件'}), 500
     except Exception as err:
         print(f"未知錯誤：{err}")
-        return jsonify({'error': True, 'message' :  str(err)}), 500
+        return jsonify({"error": True, "message" :  str(err)}), 500
     finally:
         cursor.close()
         db.close()
 
 # 取得使用者資料        
 @app.route("/api/user/auth", methods=['GET'])
-@token_required  # 如果你有 token 驗證的裝飾器
+# @token_required
 def get_user_auth(user_data=None):  # 更改名稱，user_data 從裝飾器中獲取
-    
-    print
-    
-    if not user_data:
+    token = request.headers.get('Authorization')
+
+    if not token:
+        return jsonify({"data": None}), 200
+        
+    try:
+        user_data, err = decode_token(token)  # 使用 decode_token 函數
+        
+        if err:
+            raise Exception(err)
+        
+        if not user_data:
+            return jsonify({"data": None}), 200
+        
+        return jsonify(
+            {"data":
+                {
+                    "id": user_data.get("user_id"),
+                    "name": user_data.get("username"),
+                    "email": user_data.get("email")
+                }
+            }
+        ), 200
+        
+    except Exception as e:
         return jsonify({"data": None}), 200
     
-    return jsonify({"data": user_data}), 200
+
  
 @app.route("/")
 def index():
     return render_template("index.html")
 
+# @app.route("/booking")
+# def booking():
+#     return render_template("booking.html")
 @app.route("/booking")
 def booking():
     return render_template("booking.html")
+
+
+#取得尚未確認的預定行程
+@app.route("/api/booking", methods=['GET'])
+@token_required
+def get_booking(user_data):
+    user_id = user_data['user_id']
+    
+    db = mysql.connector.connect(**db_config)
+    cursor = db.cursor(dictionary=True)
+    
+    try:
+        # 從bookings表格中擷取預定資訊
+        cursor.execute("SELECT * FROM bookings WHERE user_id = %s", (user_id,))
+        booking_data = cursor.fetchone()
+        
+        if not booking_data:
+            return jsonify({"data": None}), 200
+        
+        # 從attractions表格中獲取景點資訊
+        cursor.execute("SELECT * FROM attractions WHERE id = %s", (booking_data['attraction_id'],))
+        attraction_data = cursor.fetchone()
+        
+        response_data = {
+            "data": {
+                "attraction": {
+                    "id": attraction_data['id'],
+                    "name": attraction_data['name'],
+                    "address": attraction_data['address'],
+                    "image": fetch_images(cursor, attraction_data['id'])[0]  # 只取第一張圖片
+                },
+                "date": booking_data['date'].strftime('%Y-%m-%d'),  # 確保日期是字符串
+                "time": booking_data['time'],
+                "price": booking_data['price']
+            }
+        }
+        
+        return jsonify(response_data), 200
+    except mysql.connector.Error as err:
+        print(f"資料庫錯誤：{err}")
+        return jsonify({"error": True, "message": "資料庫錯誤"}), 500
+    except Exception as err:
+        print(f"伺服器錯誤：{err}")
+        return jsonify({"error": True, "message": str(err)}), 500
+    finally:
+        cursor.close()
+        db.close()
+        
+#建立新的預定行程       
+@app.route("/api/booking", methods=['POST'])
+@token_required
+def create_booking(user_data):
+    user_id = user_data['user_id']
+    data = request.json
+
+    attraction_id = data.get("attractionId")
+    date = data.get("date")
+    time = data.get("time")
+    price = data.get("price")
+
+    # 檢查輸入資料是否完整
+    if not all([attraction_id, date, time, price]):
+        return jsonify({"error": True, "message": "輸入不完整"}), 400
+
+    db = mysql.connector.connect(**db_config)
+    cursor = db.cursor(dictionary=True)
+    
+    cursor.execute("SELECT * FROM bookings WHERE user_id = %s", (user_id,))
+    existing_booking = cursor.fetchone()
+    
+    try:
+        if existing_booking:
+            cursor.execute("UPDATE bookings SET attraction_id = %s, date = %s, time = %s, price = %s WHERE user_id = %s",
+                      (attraction_id, date, time, price, user_id))
+        else:
+            cursor.execute("INSERT INTO bookings (user_id, attraction_id, date, time, price) VALUES (%s, %s, %s, %s, %s)",
+                      (user_id, attraction_id, date, time, price))
+        db.commit()
+
+        return jsonify({"ok": True}), 200
+    except mysql.connector.Error as err:
+        print(f"資料庫錯誤：{err}")
+        db.rollback()
+        return jsonify({"error": True, "message": "資料庫錯誤"}), 500
+    except Exception as e:
+        print(f"伺服器錯誤：{e}")
+        db.rollback()
+        return jsonify({"error": True, "message": str(e)}), 500
+    finally:
+        cursor.close()
+        db.close()
 
 @app.route("/thankyou")
 def thankyou():
@@ -263,6 +383,36 @@ def api_attractions():
             cursor.close()
         if db:  # 檢查 db 是否已賦值
             db.close()
+#刪除預定行程
+@app.route("/api/booking", methods=['DELETE'])
+@token_required
+def delete_booking(user_data):
+    user_id = user_data['user_id']
+
+    db = mysql.connector.connect(**db_config)
+    cursor = db.cursor(dictionary=True)
+
+    try:
+        # 從bookings表格中刪除該使用者的預定資訊
+        cursor.execute("DELETE FROM bookings WHERE user_id = %s", (user_id,))
+        db.commit()
+
+        # 檢查是否真的刪除了資料
+        if cursor.rowcount == 0:
+            return jsonify({"error": True, "message": "找不到預定資料或已被刪除"}), 400
+
+        return jsonify({"ok": True}), 200
+    except mysql.connector.Error as err:
+        print(f"資料庫錯誤：{err}")
+        db.rollback()
+        return jsonify({"error": True, "message": "資料庫錯誤"}), 500
+    except Exception as e:
+        print(f"伺服器錯誤：{e}")
+        db.rollback()
+        return jsonify({"error": True, "message": str(e)}), 500
+    finally:
+        cursor.close()
+        db.close()
 
 
 @app.route("/api/attraction/<int:attractionId>", methods=['GET'])
