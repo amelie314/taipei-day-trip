@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, request
+import requests
 import mysql.connector
 import re
 import os
@@ -7,7 +8,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from jwt import encode, decode
 import datetime
 from functools import wraps  #token驗證
-
+from datetime import datetime
+import random
 
 # 設定 Flask 應用
 app = Flask(__name__)
@@ -21,6 +23,12 @@ secret_key = os.environ.get("SECRET_KEY")
 app.config["SECRET_KEY"]= secret_key
 
 password = os.environ.get("PASSWORD")
+app_id = os.environ.get("APP_ID")
+app_key = os.environ.get("APP_KEY")
+partner_key = os.environ.get("PARTNER_KEY")
+merchant_id = os.environ.get("MERCHANT_ID")
+
+tappay_domain = "https://sandbox.tappaysdk.com"  
 
 # 資料庫連接設定
 db_config = {
@@ -49,6 +57,11 @@ def convert_to_dict(record, cursor):
         "lng": record['longitude'],
         "images": fetch_images(cursor, record['id'])  # 調用 fetch_images
     }
+def generate_order_number():
+    current_time = datetime.now().strftime('%Y%m%d%H%M%S')  # 獲取當前的日期和時間
+    random_digits = "".join([str(random.randint(0, 9)) for _ in range(4)])  # 生成4位隨機數字
+    return current_time + random_digits  # 連接日期時間和隨機數字作為訂單編號
+
     
 # 編碼 JWT 函式
 def encode_auth_token(user_id, username, email):
@@ -226,8 +239,10 @@ def index():
 # def booking():
 #     return render_template("booking.html")
 @app.route("/booking")
-def booking():
-    return render_template("booking.html")
+def booking(): 
+    print(app_id)
+    print(app_key)
+    return render_template("booking.html", app_id = app_id, app_key = app_key)
 
 
 #取得尚未確認的預定行程
@@ -459,5 +474,143 @@ def api_mrts():
         cursor.close()
         db.close()
 
+# @app.route("/api/orders", methods=['POST'])
+# @token_required
+# def create_order(user_data):
+    
+#     data = request.json
+
+#     prime = data.get("prime")
+#     order_data = data.get("order")
+
+#     tappay_response = requests.post(
+#         f"{tappay_domain}/tpc/payment/pay-by-prime",
+#         json={
+#             "prime": prime,
+#             "partner_key": partner_key,
+#             "merchant_id": merchant_id,
+#             "details": "旅遊行程訂單",
+#             "amount": order_data["price"],
+#             "cardholder": {
+#                 "phone_number": order_data["contact"]["phone"],
+#                 "name": order_data["contact"]["name"],
+#                 "email": order_data["contact"]["email"]
+#             }
+#         },
+#         headers={
+#                  "x-api-key": partner_key
+#         }
+#     )
+
+#     if tappay_response.json().get("status") == 0:
+#         # 如果 TapPay 交易成功，儲存訂單到資料庫
+#         db = mysql.connector.connect(**db_config)
+#         cursor = db.cursor(dictionary=True)
+
+#         try:
+#             order_number = generate_order_number()  # 生成訂單編號
+#             # 儲存訂單資料到 orders 表格
+#             cursor.execute("INSERT INTO orders (user_id, price, date, time, status, order_number) VALUES (%s, %s, %s, %s, %s, %s)",
+#             (user_data["user_id"], order_data["price"], order_data["trip"]["date"], order_data["trip"]["time"], 0, order_number))
+#             db.commit()
+
+#             # 獲取剛剛插入的訂單的ID
+#             order_id = cursor.lastrowid
+
+#             # 更新 bookings 表格的 order_id 欄位
+#             cursor.execute("UPDATE bookings SET order_id = %s WHERE user_id = %s", (order_id, user_data["user_id"]))
+#             db.commit()
+
+#             # 儲存聯絡人資料到 contacts 表格
+#             cursor.execute("INSERT INTO contacts (order_id, name, email, phone) VALUES (%s, %s, %s, %s)",
+#                         (order_id, order_data["contact"]["name"], order_data["contact"]["email"], order_data["contact"]["phone"]))
+#             db.commit()
+
+#             return jsonify({"ok": True}), 200
+#         except mysql.connector.Error as err:
+#             db.rollback()
+#             return jsonify({"error": True, "message": str(err)}), 500
+#         except Exception as e:
+#             db.rollback()
+#             return jsonify({"error": True, "message": str(e)}), 500
+#         finally:
+#             cursor.close()
+#             db.close()
+# ... [略去不變的部分]
+
+@app.route("/api/orders", methods=['POST'])
+@token_required
+def create_order(user_data):
+    
+    data = request.json
+
+    prime = data.get("prime")
+    order_data = data.get("order")
+
+    tappay_response = requests.post(
+        f"{tappay_domain}/tpc/payment/pay-by-prime",
+        json={
+            "prime": prime,
+            "partner_key": partner_key,
+            "merchant_id": merchant_id,
+            "details": "旅遊行程訂單",
+            "amount": order_data["price"],
+            "cardholder": {
+                "phone_number": order_data["contact"]["phone"],
+                "name": order_data["contact"]["name"],
+                "email": order_data["contact"]["email"]
+            }
+        },
+        headers={
+                 "x-api-key": partner_key
+        }
+    )
+
+    db = mysql.connector.connect(**db_config)
+    cursor = db.cursor(dictionary=True)
+
+    try:
+        order_number = generate_order_number()  # 生成訂單編號
+        
+        if tappay_response.json().get("status") == 0:
+            # 如果 TapPay 交易成功
+            # 儲存訂單資料到 orders 表格
+            cursor.execute("INSERT INTO orders (user_id, price, date, time, status, order_number) VALUES (%s, %s, %s, %s, %s, %s)",
+                           (user_data["user_id"], order_data["price"], order_data["trip"]["date"], order_data["trip"]["time"], '已付款', order_number))
+        else:
+            cursor.execute("INSERT INTO orders (user_id, price, date, time, status, order_number) VALUES (%s, %s, %s, %s, %s, %s)",
+                           (user_data["user_id"], order_data["price"], order_data["trip"]["date"], order_data["trip"]["time"], '未付款', order_number))
+        
+        db.commit()
+
+        # 獲取剛剛插入的訂單的ID
+        order_id = cursor.lastrowid
+
+        # 更新 bookings 表格的 order_id 欄位
+        cursor.execute("UPDATE bookings SET order_id = %s WHERE user_id = %s", (order_id, user_data["user_id"]))
+        db.commit()
+
+        # 儲存聯絡人資料到 contacts 表格
+        cursor.execute("INSERT INTO contacts (order_id, name, email, phone) VALUES (%s, %s, %s, %s)",
+                    (order_id, order_data["contact"]["name"], order_data["contact"]["email"], order_data["contact"]["phone"]))
+        db.commit()
+
+        return jsonify({"ok": True, "order_number": order_number}), 200
+
+    except mysql.connector.Error as err:
+        db.rollback()
+        return jsonify({"error": True, "message": str(err)}), 500
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": True, "message": str(e)}), 500
+    finally:
+        cursor.close()
+        db.close()
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3000)
+
+
+
+
