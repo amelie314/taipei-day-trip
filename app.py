@@ -6,9 +6,8 @@ import os
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from jwt import encode, decode
-import datetime
 from functools import wraps  #token驗證
-from datetime import datetime
+import datetime
 import random
 
 # 設定 Flask 應用
