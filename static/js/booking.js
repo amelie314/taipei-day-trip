@@ -279,7 +279,7 @@ function onSubmit(event) {
       .then((data) => {
         if (data.ok) {
           alert("訂單建立成功！");
-          window.location.href = "/thank-you"; // 跳轉到感謝頁面，或其他你希望的頁面
+          window.location.href = "/thankyou?number=" + data.order_number; // 跳轉到感謝頁面
         } else {
           alert("訂單建立失敗: " + data.message);
         }

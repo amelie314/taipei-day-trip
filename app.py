@@ -335,9 +335,17 @@ def create_booking(user_data):
         cursor.close()
         db.close()
 
+# @app.route("/thankyou")
+# def thankyou():
+#     return render_template("thankyou.html")
 @app.route("/thankyou")
 def thankyou():
-    return render_template("thankyou.html")
+    order_number = request.args.get('number')  # 從查詢字串取得訂單編號
+    if not order_number:
+        return "訂單編號缺失", 400
+    # 這裡可以做更多與訂單編號相關的操作，例如從資料庫裡查詢該訂單的詳細資訊等
+    return render_template("thankyou.html", order_number=order_number)
+
 
 @app.route("/attraction/<id>")
 def attraction(id):
