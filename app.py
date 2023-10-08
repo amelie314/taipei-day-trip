@@ -481,69 +481,6 @@ def api_mrts():
         cursor.close()
         db.close()
 
-# @app.route("/api/orders", methods=['POST'])
-# @token_required
-# def create_order(user_data):
-    
-#     data = request.json
-
-#     prime = data.get("prime")
-#     order_data = data.get("order")
-
-#     tappay_response = requests.post(
-#         f"{tappay_domain}/tpc/payment/pay-by-prime",
-#         json={
-#             "prime": prime,
-#             "partner_key": partner_key,
-#             "merchant_id": merchant_id,
-#             "details": "旅遊行程訂單",
-#             "amount": order_data["price"],
-#             "cardholder": {
-#                 "phone_number": order_data["contact"]["phone"],
-#                 "name": order_data["contact"]["name"],
-#                 "email": order_data["contact"]["email"]
-#             }
-#         },
-#         headers={
-#                  "x-api-key": partner_key
-#         }
-#     )
-
-#     if tappay_response.json().get("status") == 0:
-#         # 如果 TapPay 交易成功，儲存訂單到資料庫
-#         db = mysql.connector.connect(**db_config)
-#         cursor = db.cursor(dictionary=True)
-
-#         try:
-#             order_number = generate_order_number()  # 生成訂單編號
-#             # 儲存訂單資料到 orders 表格
-#             cursor.execute("INSERT INTO orders (user_id, price, date, time, status, order_number) VALUES (%s, %s, %s, %s, %s, %s)",
-#             (user_data["user_id"], order_data["price"], order_data["trip"]["date"], order_data["trip"]["time"], 0, order_number))
-#             db.commit()
-
-#             # 獲取剛剛插入的訂單的ID
-#             order_id = cursor.lastrowid
-
-#             # 更新 bookings 表格的 order_id 欄位
-#             cursor.execute("UPDATE bookings SET order_id = %s WHERE user_id = %s", (order_id, user_data["user_id"]))
-#             db.commit()
-
-#             # 儲存聯絡人資料到 contacts 表格
-#             cursor.execute("INSERT INTO contacts (order_id, name, email, phone) VALUES (%s, %s, %s, %s)",
-#                         (order_id, order_data["contact"]["name"], order_data["contact"]["email"], order_data["contact"]["phone"]))
-#             db.commit()
-
-#             return jsonify({"ok": True}), 200
-#         except mysql.connector.Error as err:
-#             db.rollback()
-#             return jsonify({"error": True, "message": str(err)}), 500
-#         except Exception as e:
-#             db.rollback()
-#             return jsonify({"error": True, "message": str(e)}), 500
-#         finally:
-#             cursor.close()
-#             db.close()
-# ... [略去不變的部分]
 
 @app.route("/api/orders", methods=['POST'])
 @token_required
@@ -614,6 +551,61 @@ def create_order(user_data):
         cursor.close()
         db.close()
 
+@app.route("/api/order/<orderNumber>", methods=['GET'])
+@token_required
+def get_order_by_number(user_data, orderNumber):
+    db = mysql.connector.connect(**db_config)
+    cursor = db.cursor(dictionary=True)
+    
+    try:
+        # 從 orders 表格中擷取訂單資訊
+        cursor.execute("SELECT * FROM orders WHERE order_number = %s AND user_id = %s", (orderNumber, user_data["user_id"]))
+        order = cursor.fetchone()
+
+        if not order:
+            return jsonify({"data": None}), 200
+
+        # 從 contacts 表格中擷取聯絡人資訊
+        cursor.execute("SELECT * FROM contacts WHERE order_id = %s", (order["id"],))
+        contact = cursor.fetchone()
+
+        # 從 bookings 表格和 attractions 表格中擷取景點資訊
+        cursor.execute("SELECT * FROM bookings INNER JOIN attractions ON bookings.attraction_id = attractions.id WHERE order_id = %s", (order["id"],))
+        booking = cursor.fetchone()
+
+        response_data = {
+            "data": {
+                "number": order["order_number"],
+                "price": order["price"],
+                "trip": {
+                    "attraction": {
+                        "id": booking["id"],
+                        "name": booking["name"],
+                        "address": booking["address"],
+                        "image": fetch_images(cursor, booking["id"])[0]  # 只取第一張圖片
+                    },
+                    "date": booking["date"].strftime('%Y-%m-%d'),  # 確保日期是字符串
+                    "time": booking["time"]
+                },
+                "contact": {
+                    "name": contact["name"],
+                    "email": contact["email"],
+                    "phone": contact["phone"]
+                },
+                "status": order["status"]
+            }
+        }
+        
+        return jsonify(response_data), 200
+    except mysql.connector.Error as err:
+        print(f"資料庫錯誤：{err}")
+        return jsonify({"error": True, "message": "資料庫錯誤"}), 500
+    except Exception as err:
+        print(f"伺服器錯誤：{err}")
+        return jsonify({"error": True, "message": str(err)}), 500
+    finally:
+        cursor.close()
+        db.close()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3000)
