@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
   btn.addEventListener("click", function (event) {
     event.preventDefault();
     // 顯示模態視窗
-    modal.style.display = "block";
+    modal.style.display = "flex";
   });
 
   // 關閉模態視窗
@@ -88,13 +88,13 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("switch-to-register")
     .addEventListener("click", function () {
       loginForm.style.display = "none";
-      registerForm.style.display = "block";
+      registerForm.style.display = "flex";
     });
 
   document
     .getElementById("switch-to-login")
     .addEventListener("click", function () {
-      loginForm.style.display = "block";
+      loginForm.style.display = "flex";
       registerForm.style.display = "none";
     });
 
@@ -165,7 +165,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function handleBookingClick(modal) {
   const token = localStorage.getItem("token");
-  console.log(token, "token");
+
+  // console.log(token, "token");
 
   if (token) {
     checkTokenValidity(token).then((isValid) => {
@@ -173,12 +174,12 @@ function handleBookingClick(modal) {
         window.location.href = "/booking";
       } else {
         // openLoginModal
-        modal.style.display = "block";
+        modal.style.display = "flex";
       }
     });
   } else {
     // openLoginModal
-    modal.style.display = "block";
+    modal.style.display = "flex";
   }
 }
 

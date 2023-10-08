@@ -91,7 +91,7 @@ nav {
   display: flex;
   flex-direction: column;
   width: 340px;
-  margin: auto;
+  margin: 80px auto 0 auto;
 }
 
 .gradient-bar {
