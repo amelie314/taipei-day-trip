@@ -1,0 +1,18 @@
+@import "base";
+
+body {
+    background-color: #757575;
+}
+
+.container-wrapper {
+    background-color: white;
+
+    .container {
+        margin: 54px auto 0 auto;
+    }
+}
+
+p {
+    margin-top: 30px;
+    padding: 30px;
+}
