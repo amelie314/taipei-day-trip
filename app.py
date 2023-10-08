@@ -57,7 +57,7 @@ def convert_to_dict(record, cursor):
         "images": fetch_images(cursor, record['id'])  # 調用 fetch_images
     }
 def generate_order_number():
-    current_time = datetime.now().strftime('%Y%m%d%H%M%S')  # 獲取當前的日期和時間
+    current_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')  # 獲取當前的日期和時間
     random_digits = "".join([str(random.randint(0, 9)) for _ in range(4)])  # 生成4位隨機數字
     return current_time + random_digits  # 連接日期時間和隨機數字作為訂單編號
 
