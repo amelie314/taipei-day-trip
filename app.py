@@ -255,7 +255,7 @@ def get_booking(user_data):
     
     try:
         # 從bookings表格中擷取預定資訊
-        cursor.execute("SELECT * FROM bookings WHERE user_id = %s", (user_id,))
+        cursor.execute("SELECT * FROM bookings WHERE user_id = %s AND order_id IS NULL", (user_id,))
         booking_data = cursor.fetchone()
         
         if not booking_data:
@@ -309,12 +309,13 @@ def create_booking(user_data):
     db = mysql.connector.connect(**db_config)
     cursor = db.cursor(dictionary=True)
     
-    cursor.execute("SELECT * FROM bookings WHERE user_id = %s", (user_id,))
+    cursor.execute("SELECT * FROM bookings WHERE user_id = %s AND order_id IS NULL",(user_id,))
     existing_booking = cursor.fetchone()
     
     try:
         if existing_booking:
-            cursor.execute("UPDATE bookings SET attraction_id = %s, date = %s, time = %s, price = %s WHERE user_id = %s",
+            cursor.execute("UPDATE bookings SET attraction_id = %s, date = %s, time = %s, price = %s WHERE user_id = %s AND order_id IS NULL",
+                        #    and order_id is NULL
                       (attraction_id, date, time, price, user_id))
         else:
             cursor.execute("INSERT INTO bookings (user_id, attraction_id, date, time, price) VALUES (%s, %s, %s, %s, %s)",
@@ -416,7 +417,7 @@ def delete_booking(user_data):
 
     try:
         # 從bookings表格中刪除該使用者的預定資訊
-        cursor.execute("DELETE FROM bookings WHERE user_id = %s", (user_id,))
+        cursor.execute("DELETE FROM bookings WHERE user_id = %s AND order_id IS NULL", (user_id,))
         db.commit()
 
         # 檢查是否真的刪除了資料

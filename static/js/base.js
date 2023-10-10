@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
         username = name;
         useremail = email;
 
-        console.log(username, "username");
+        // console.log(username, "username");
 
         // 觸發一個自定義的事件
         const event = new Event("usernameUpdated");

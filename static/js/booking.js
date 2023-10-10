@@ -17,10 +17,10 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function tappayPay() {
-    console.log("tappayPay");
+    // console.log("tappayPay");
     TPDirect.setupSDK(appId, appKey, "sandbox");
 
-    console.log(appId, appKey);
+    // console.log(appId, appKey);
 
     // 選填 CCV Example
     let fields = {
@@ -213,7 +213,7 @@ function onSubmit(event) {
       alert("get prime error " + result.msg);
       return;
     }
-    alert("get prime 成功，prime: " + result.card.prime);
+    // alert("get prime 成功，prime: " + result.card.prime);
 
     // 從畫面中取得使用者的訂單資訊
     const name = document.querySelector("#user-name").value;
@@ -264,7 +264,7 @@ function onSubmit(event) {
       },
     };
 
-    console.log(orderData);
+    // console.log(orderData);
 
     // 發送訂單到伺服器
     fetch("/api/orders", {

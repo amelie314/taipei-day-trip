@@ -15,27 +15,25 @@ function fetchData(page, keyword = "") {
   // 設置 isLoading 為 true，防止重複載入
   isLoading = true;
 
-  console.log(
-    "loading API ?page=",
-    page,
-    "?keyword=",
-    keyword ? keyword : "全部"
-  );
+  // console.log(
+  //   "loading API ?page=",
+  //   page,
+  //   "?keyword=",
+  //   keyword ? keyword : "全部"
+  // );
 
   let apiUrl = `/api/attractions?page=${page}`;
   // let apiUrl = `${RemoteURL}api/attractions?page=${page}`;
   if (keyword) {
     apiUrl += `&keyword=${keyword}`;
   }
-  console.log(apiUrl);
+  // console.log(apiUrl);
 
   // 載入資料
   fetch(apiUrl)
     .then((response) => response.json())
     .then((data) => {
       if (data.data && data.data.length > 0) {
-        console.log("data keyword");
-
         if (keyword && nextPage === 0) {
           const profile = document.querySelector(".profile");
           profile.innerHTML = ""; // 清空原本的內容
@@ -45,7 +43,7 @@ function fetchData(page, keyword = "") {
 
         nextPage = data.nextPage;
 
-        console.log("Next loading API ?page=", nextPage);
+        // console.log("Next loading API ?page=", nextPage);
       } else {
         // 如果沒有找到相關資料，你也可以選擇顯示一個提示訊息
         const profile = document.querySelector(".profile");
@@ -118,14 +116,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // mrt buttons contents
 function fetchAndGenerateOptions() {
-  console.log("triggered!");
+  // console.log("triggered!");
 
   // fetch(`${RemoteURL}api/mrts`)
   fetch(`/api/mrts`)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
-
       const optionsNull = data.data;
       const options = optionsNull.filter((optionsNull) => optionsNull !== null);
       const listContainer = document.querySelector(".list-container");
