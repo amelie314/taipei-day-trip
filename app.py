@@ -9,6 +9,8 @@ from jwt import encode, decode
 from functools import wraps  #token驗證
 import datetime
 import random
+from mysql.connector import pooling
+
 
 # 設定 Flask 應用
 app = Flask(__name__)
@@ -29,13 +31,20 @@ merchant_id = os.environ.get("MERCHANT_ID")
 
 tappay_domain = "https://sandbox.tappaysdk.com"  
 
-# 資料庫連接設定
+
+# # 資料庫連接設定
 db_config = {
     'host': 'localhost',
     'user': 'root',
     'password': password,
     'database': 'taipei_day_trip_2'
 }
+db_pool = pooling.MySQLConnectionPool(pool_name="mypool",
+                                      pool_size=5,
+                                      **db_config)
+# 新的方式：從連接池中獲取連接
+def get_db_connection():
+    return db_pool.get_connection()
 
 # 從 attraction_images 表格中獲取景點的圖片 URLs
 def fetch_images(cursor, attraction_id):
@@ -135,7 +144,7 @@ def register():
     hashed_password = generate_password_hash(password, method='sha256')
     
     # 連接資料庫
-    db = mysql.connector.connect(**db_config)
+    db = get_db_connection()  # 使用新的方法來獲取資料庫連接
     cursor = db.cursor(dictionary=True)
     
     try:
@@ -170,7 +179,7 @@ def login():
     password = data.get('password')
 
     # 連接資料庫 
-    db = mysql.connector.connect(**db_config)
+    db = get_db_connection()  # 使用新的方法來獲取資料庫連接
     cursor = db.cursor(dictionary=True)
 
     try:
@@ -250,7 +259,7 @@ def booking():
 def get_booking(user_data):
     user_id = user_data['user_id']
     
-    db = mysql.connector.connect(**db_config)
+    db = get_db_connection()  # 使用新的方法來獲取資料庫連接
     cursor = db.cursor(dictionary=True)
     
     try:
@@ -306,7 +315,7 @@ def create_booking(user_data):
     if not all([attraction_id, date, time, price]):
         return jsonify({"error": True, "message": "輸入不完整"}), 400
 
-    db = mysql.connector.connect(**db_config)
+    db = get_db_connection()  # 使用新的方法來獲取資料庫連接
     cursor = db.cursor(dictionary=True)
     
     cursor.execute("SELECT * FROM bookings WHERE user_id = %s AND order_id IS NULL",(user_id,))
@@ -359,7 +368,7 @@ def api_attractions():
         page = int(request.args.get('page', 0))
         keyword = request.args.get('keyword')
 
-        db = mysql.connector.connect(**db_config)
+        db = get_db_connection()  # 使用新的方法來獲取資料庫連接
         cursor = db.cursor(dictionary=True)
         
         # 總數
@@ -412,7 +421,7 @@ def api_attractions():
 def delete_booking(user_data):
     user_id = user_data['user_id']
 
-    db = mysql.connector.connect(**db_config)
+    db = get_db_connection()  # 使用新的方法來獲取資料庫連接
     cursor = db.cursor(dictionary=True)
 
     try:
@@ -441,7 +450,7 @@ def delete_booking(user_data):
 @app.route("/api/attraction/<int:attractionId>", methods=['GET'])
 def api_attraction(attractionId):
     try:
-        db = mysql.connector.connect(**db_config)
+        db = get_db_connection()  # 使用新的方法來獲取資料庫連接
         cursor = db.cursor(dictionary=True)
         cursor.execute("SELECT * FROM attractions WHERE id = %s", (attractionId,))
         attraction = cursor.fetchone()
@@ -463,7 +472,7 @@ def api_attraction(attractionId):
 @app.route("/api/mrts", methods=['GET'])
 def api_mrts():
     try:
-        db = mysql.connector.connect(**db_config)
+        db = get_db_connection()  # 使用新的方法來獲取資料庫連接
         cursor = db.cursor(dictionary=True)
 
         # 取得數據庫裡不重複的捷運站名稱，且
@@ -511,7 +520,7 @@ def create_order(user_data):
         }
     )
 
-    db = mysql.connector.connect(**db_config)
+    db = get_db_connection()  # 使用新的方法來獲取資料庫連接
     cursor = db.cursor(dictionary=True)
 
     try:
@@ -555,7 +564,7 @@ def create_order(user_data):
 @app.route("/api/order/<orderNumber>", methods=['GET'])
 @token_required
 def get_order_by_number(user_data, orderNumber):
-    db = mysql.connector.connect(**db_config)
+    db = get_db_connection()  # 使用新的方法來獲取資料庫連接
     cursor = db.cursor(dictionary=True)
     
     try:
