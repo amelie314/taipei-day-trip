@@ -6,8 +6,18 @@
   rel="stylesheet"
   href="{{ url_for('static', filename='css/booking.min.css') }}"
 />
+<script src="https://js.tappaysdk.com/sdk/tpdirect/v5.17.0"></script>
+
 <script src="{{ url_for('static', filename='js/booking.js') }}"></script>
-{% endblock %} {% block content %}
+
+<script>
+ let appId = "{{ app_id }}";
+ let appKey = "{{ app_key }}";
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- 引入 TapPay JavaScript SDK -->
 
 <!-- 景點資訊部分 -->
 <div class="container-wrapper">
@@ -16,7 +26,7 @@
   <div class="welcome">
     您好，<span class="welcome-title"></span>，待預定的行程如下：
   </div>
-  <div class="attraction-info">
+  <div class="attraction-info" data-id="">
     <img class="attraction-image" alt="景點圖片" src="" />
     <div class="attraction-booking-list">
       <h5 class="attraction-booking-title">
@@ -83,34 +93,38 @@
     <h3 class="booking-title">信用卡付款資訊</h3>
     <div>
     <label for="card-number">卡片號碼：</label>
-    <input class="input-system" 
+    <div class="tpfield input-system" id="card-number"></div>
+    <!-- <input class="input-system" 
       type="text"
       id="card-number"
       name="card-number"
       placeholder="請輸入信用卡號碼"
       required
-    />
+    /> -->
     </div>
     <div>
     <label for="expiration-date">有效期限：</label>
-    <input class="input-system" 
+    <div class="tpfield input-system" id="card-expiration-date"></div>
+    <!-- <input class="input-system" 
       type="text"
       id="expiration-date"
       name="expiration-date"
       placeholder="MM / YY"
       required
-    />
+    /> -->
     </div>
     <div>
     <label for="cvv">信用卡背面三碼：</label>
-    <input  class="input-system" type="text" id="cvv" name="cvv" placeholder="CVV" required />
+    <!-- <input  class="input-system" type="text" id="cvv" name="cvv" placeholder="CVV" required />
+     -->
+     <div class="tpfield input-system" id="card-ccv"></div>
     </div>
   </div>
   <div class="separator-booking third-separator"></div>
   <div class="booking-max-width total-price-div">
     <div class="total-price-list">
       <p class="total-price-title">總價：<span class="total-price-number"></span></p>
-      <button type="submit">確認訂購並付款</button>
+      <button type="submit" onclick="onSubmit(event);">確認訂購並付款</button>
     </div>
   </div>
 </form>

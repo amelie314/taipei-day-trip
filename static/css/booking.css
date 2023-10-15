@@ -91,7 +91,7 @@ nav {
   display: flex;
   flex-direction: column;
   width: 340px;
-  margin: auto;
+  margin: 80px auto 0 auto;
 }
 
 .gradient-bar {
@@ -305,6 +305,14 @@ footer {
   font-weight: 700;
   margin-top: 5px;
   margin-bottom: 45px;
+}
+
+.tpfield {
+  height: 40px;
+  width: 300px;
+  border: 1px solid gray;
+  margin: 5px 0;
+  padding: 5px;
 }
 
 .payment-info {

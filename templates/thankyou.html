@@ -1,1 +1,19 @@
 <!-- @format -->
+{% extends "base.html" %} {% block title %} 台北一日遊-感謝 {% endblock %} {%
+block head_extra %}
+<script src="{{ url_for('static', filename='js/thankyou.js') }}"></script>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/thankyou.css') }}"
+/>
+{% endblock %} {% block content %}
+
+<div class="container-wrapper">
+  <div class="container">
+    <main>
+      <p>謝謝您的訂購，您的訂單編號是: {{ order_number }}</p>
+    </main>
+  </div>
+</div>
+
+{% endblock %} ```

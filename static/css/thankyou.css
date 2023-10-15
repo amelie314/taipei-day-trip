@@ -195,3 +195,20 @@ footer {
   line-height: 13px;
   color: white;
 }
+
+body {
+  background-color: #757575;
+}
+
+.container-wrapper {
+  background-color: white;
+}
+
+.container-wrapper .container {
+  margin: 54px auto 0 auto;
+}
+
+p {
+  margin-top: 30px;
+  padding: 30px;
+}
