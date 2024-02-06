@@ -141,7 +141,7 @@ def register():
         return jsonify({"error": True, "message": "密碼必須至少有8個字元"}), 400
 
     # 密碼加密
-    hashed_password = generate_password_hash(password, method='sha256')
+    hashed_password = generate_password_hash(password)
     
     # 連接資料庫
     db = get_db_connection()  # 使用新的方法來獲取資料庫連接
