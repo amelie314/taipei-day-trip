@@ -77,6 +77,9 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault();
     // 顯示模態視窗
     modal.style.display = "flex";
+    // 填充預設登入資訊
+    document.getElementById("login-email").value = "demo@gmail.com";
+    document.getElementById("login-password").value = "Demo888888";
   });
 
   // 關閉模態視窗
