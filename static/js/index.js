@@ -174,7 +174,7 @@ function createElements(data) {
     divCardBottom.className = "card-bottom";
 
     let imgElement = document.createElement("img");
-    imgElement.src = attractions[i].images[0] || "";
+    imgElement.src = "/static/images/loading.gif"; // 加載圖片或 loading 圖片
     imgElement.alt = `profile-img-${i + 1}`;
     imgElement.className = "main-img";
 
@@ -209,5 +209,13 @@ function createElements(data) {
     divCardBottom.appendChild(divElementCategory);
     divCardBottom.appendChild(divElementMRT);
     profile.appendChild(liProfile);
+
+    // 加載實際圖片
+    const image = new Image();
+    image.onload = function () {
+      // 圖片加載完成後隱藏 loading 圖片，顯示實際圖片
+      imgElement.src = attractions[i].images[0];
+    };
+    image.src = attractions[i].images[0]; // 開始加載圖片
   }
 }

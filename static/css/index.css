@@ -324,6 +324,7 @@ main {
 }
 
 /* 12個Profile方框的容器 */
+
 .profile {
   padding: 15px;
   gap: 30px 30px;
@@ -474,4 +475,8 @@ main {
     height: 20px;
     /* 填滿父元素的高度 */
   }
+}
+/* CSS 改變圖片大小 */
+.loading-img {
+  display: block !important;
 }
