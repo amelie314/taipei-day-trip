@@ -2,6 +2,8 @@
 
 This Taipei Day Trip Website is a full-stack application designed to provide tourists with a seamless experience in exploring Taipei's attractions, managing bookings, and handling secure payments with ease. Visitors can engage with the platform through personalized trip planning and community interactions, enhancing their travel experience.
 
+![1708098322358](image/README/1708098322358.png)
+
 ## Frontend Technique
 
 - **JavaScript (ES6+)**
@@ -23,3 +25,10 @@ This Taipei Day Trip Website is a full-stack application designed to provide tou
 - **JWT Authentication**
 
   - Security: Integrated JWT to secure user sessions and protect against unauthorized access.
+
+## Feature Description
+
+- Attraction Exploration：Users can explore various attractions in Taipei, with detailed information and images to enhance their decision-making process.
+
+  * Dynamic Listings: Attractions are listed dynamically based on user preferences and search criteria.
+  * Detailed Information: Each attraction page provides in-depth details, including images, descriptions.
