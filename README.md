@@ -2,6 +2,9 @@
 
 This Taipei Day Trip Website is a full-stack application designed to provide tourists with a seamless experience in exploring Taipei's attractions, managing bookings, and handling secure payments with ease. Visitors can engage with the platform through personalized trip planning and community interactions, enhancing their travel experience.
 
+![Uploading 截圖 2024-02-16 下午3.13.50.png…]()
+
+
 ## Frontend Technique
 
 - **JavaScript (ES6+)**
